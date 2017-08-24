@@ -1,7 +1,7 @@
 # Личный проект «YetiCave» 
 
 * Студент: [Артём Козлов](https://up.htmlacademy.ru/php/2/user/109874).
-* Наставник: `Неизвестно`.
+* Наставник: [Игорь Антонов](https://up.htmlacademy.ru/php/2/user/3162).
 
 ---
 
