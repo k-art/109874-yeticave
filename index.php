@@ -105,15 +105,12 @@ $lot_time_remaining = gmdate('H:i',$tomorrow - $now);
             <?php
 
             $categories = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-            $index = 0;
-            $num = count($categories);
 
-            while ($index < $num) {
-                $cat = $categories[$index];
-                print('<option>' . $cat . '</option>');
-                $index = $index + 1;
+            foreach ($categories as $value) {
+                print("<option>$value</option>");
             }
             ?>
+
             </select>
         </div>
         <ul class="lots__list">
