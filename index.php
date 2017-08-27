@@ -21,9 +21,6 @@ $now = strtotime('now');
 
 $lot_time_remaining = gmdate('H:i',$tomorrow - $now);
 
-
-//$lot_list = [$lot];
-//$lot
 ?>
 
 <!DOCTYPE html>
