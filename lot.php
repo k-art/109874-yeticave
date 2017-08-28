@@ -118,14 +118,14 @@ $bets = [
                         $_24h = 86400;
                         $_1h = 3600;
 
-                        if ($past_time >= $_24h) {
+                        if ($past_time > $_24h) {
                             $result = gmdate('d.m.y в H:i', $time_stamp);
                         }
-                        elseif ($past_time < $_24h && $past_time >= $_1h){
-                            $result = gmdate('G часов назад', $past_time);
+                        elseif ($past_time < $_1h) {
+                            $result = gmdate('i минут назад', $past_time);
                         }
                         else {
-                            $result = gmdate('i минут назад', $past_time);
+                            $result = gmdate('G часов назад', $past_time);
                         }
 
                         return $result;
