@@ -110,36 +110,35 @@ $bets = [
                 <div class="history">
                     <h3>История ставок (<span>4</span>)</h3>
 
+                    <table class="history__list">
+
                     <?php
 
                     function format_time ($time_stamp) {
                         $now = strtotime('now');
                         $past_time = $now - $time_stamp ;
-                        $_24h = 86400;
-                        $_1h = 3600;
+                        $time_24h = 86400;
+                        $time_1h = 3600;
 
-                        if ($past_time > $_24h) {
-                            $result = gmdate('d.m.y в H:i', $time_stamp);
+                        if ($past_time > $time_24h) {
+                            return gmdate('d.m.y в H:i', $time_stamp);
                         }
-                        elseif ($past_time < $_1h) {
-                            $result = gmdate('i минут назад', $past_time);
+                        elseif ($past_time < $time_1h) {
+                            return gmdate('i минут назад', $past_time);
                         }
                         else {
-                            $result = gmdate('G часов назад', $past_time);
+                            return gmdate('G часов назад', $past_time);
                         }
-
-                        return $result;
                     }
 
                     foreach ($bets as $key => $value) : ?>
-                    <table class="history__list">
                         <tr class="history__item">
                             <td class="history__name"><?=$value['name']; ?></td>
                             <td class="history__price"><?=$value['price']; ?> р</td>
                             <td class="history__time"><?=format_time($value['ts']); ?></td>
                         </tr>
-                    </table>
                     <?php endforeach; ?>
+                    </table>
                 </div>
             </div>
         </div>
