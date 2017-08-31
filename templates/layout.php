@@ -1,8 +1,8 @@
 <?php
 $is_auth = (bool) rand(0, 1);
 
-$user_name = 'Константин';
-$user_avatar = 'img/user.jpg';
+//$user_name = 'Константин';
+//$user_avatar = 'img/user.jpg';
 
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
@@ -27,7 +27,7 @@ $lot_time_remaining = gmdate('H:i',$tomorrow - $now);
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><?=$title;?></title>
+    <title><?=$data['title'];?></title>
     <link href="css/normalize.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
