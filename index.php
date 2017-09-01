@@ -72,7 +72,7 @@ $index_data = [
     'lot_time_remaining' => $lot_time_remaining
 ];
 
-$content = render_template('templates/index.php', $index_data);
+$content = render_template('index', $index_data);
 
 $layout_data = [
     'title' => $title,
@@ -82,7 +82,7 @@ $layout_data = [
     'content' => $content
 ];
 
-$layout_template = render_template('templates/layout.php', $layout_data);
+$layout_template = render_template('layout', $layout_data);
 
 print ($layout_template);
 ?>
