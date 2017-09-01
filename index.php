@@ -66,10 +66,15 @@ $lots = [
 
 require_once('functions.php');
 
-$content = render_template('templates/index.php', ['categories' => $categories,
-    'lots' => $lots, 'lot_time_remaining' => $lot_time_remaining]);
+$index_data = [
+    'categories' => $categories,
+    'lots' => $lots,
+    'lot_time_remaining' => $lot_time_remaining
+];
 
-$data = [
+$content = render_template('templates/index.php', $index_data);
+
+$layout_data = [
     'title' => $title,
     'user_name' => $user_name,
     'user_avatar' => $user_avatar,
@@ -77,8 +82,7 @@ $data = [
     'content' => $content
 ];
 
-$layout_template = render_template('templates/layout.php', $data);
+$layout_template = render_template('templates/layout.php', $layout_data);
 
 print ($layout_template);
-//print ($content);
 ?>
