@@ -27,20 +27,18 @@
         <h2>Открытые лоты</h2>
         <select class="lots__select">
 
-            <?php
-
-            foreach ($data['categories'] as $value) {
-                print("<option>$value</option>");
-            }
-            ?>
+        <?php
+        foreach ($categories as $value) {
+            print("<option>$value</option>");
+        }
+        ?>
 
         </select>
     </div>
     <ul class="lots__list">
 
         <?php
-
-        foreach ($data['lots'] as $key => $value) : ?>
+        foreach ($lots as $key => $value) : ?>
 
             <li class="lots__item lot">
                 <div class="lot__image">
