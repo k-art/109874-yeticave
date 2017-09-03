@@ -1,5 +1,4 @@
 <?php
-
 // ставки пользователей, которыми надо заполнить таблицу
 $bets = [
     ['name' => 'Иван', 'price' => 11500, 'ts' => strtotime('-' . rand(1, 50) .' minute')],
@@ -7,6 +6,17 @@ $bets = [
     ['name' => 'Евгений', 'price' => 10500, 'ts' => strtotime('-' . rand(25, 50) .' hour')],
     ['name' => 'Семён', 'price' => 10000, 'ts' => strtotime('last week')]
 ];
+
+
+require_once ('lots_data.php');
+
+if (isset($_GET['id']) &&  is_numeric($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+else {
+    http_response_code(404);
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +77,8 @@ $bets = [
         </ul>
     </nav>
     <section class="lot-item container">
-        <h2>DC Ply Mens 2016/2017 Snowboard</h2>
+
+        <h2><?=$lots[$id]['name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
