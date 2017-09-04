@@ -1,5 +1,4 @@
 <?php
-
 // ставки пользователей, которыми надо заполнить таблицу
 $bets = [
     ['name' => 'Иван', 'price' => 11500, 'ts' => strtotime('-' . rand(1, 50) .' minute')],
@@ -7,6 +6,17 @@ $bets = [
     ['name' => 'Евгений', 'price' => 10500, 'ts' => strtotime('-' . rand(25, 50) .' hour')],
     ['name' => 'Семён', 'price' => 10000, 'ts' => strtotime('last week')]
 ];
+
+
+require_once ('lots_data.php');
+
+if (isset($_GET['id']) &&  is_numeric($_GET['id'])) {
+    $id = $_GET['id'];
+}
+
+else {
+    http_response_code(404);
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,13 +77,14 @@ $bets = [
         </ul>
     </nav>
     <section class="lot-item container">
-        <h2>DC Ply Mens 2016/2017 Snowboard</h2>
+
+        <h2><?=$lots[$id]['name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <img src="img/lot-image.jpg" width="730" height="548" alt="Сноуборд">
+                    <img src="<?=$lots[$id]['url']?>" width="730" height="548" alt="Сноуборд">
                 </div>
-                <p class="lot-item__category">Категория: <span>Доски и лыжи</span></p>
+                <p class="lot-item__category">Категория: <span><?=$lots[$id]['category']?></span></p>
                 <p class="lot-item__description">Легкий маневренный сноуборд, готовый дать жару в любом парке, растопив
                     снег
                     мощным щелчкоми четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях, наделяет этот
@@ -93,7 +104,7 @@ $bets = [
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost">11 500</span>
+                            <span class="lot-item__cost"><?=$lots[$id]['price']?></span>
                         </div>
                         <div class="lot-item__min-cost">
                             Мин. ставка <span>12 000 р</span>
