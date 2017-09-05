@@ -48,4 +48,3 @@ $layout_data = [
 $layout_template = render_template('layout', $layout_data);
 
 print ($layout_template);
-?>

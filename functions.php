@@ -13,4 +13,3 @@ function render_template ($file_name, $data) {
     }
     return '';
 }
-?>
