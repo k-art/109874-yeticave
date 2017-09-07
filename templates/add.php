@@ -58,8 +58,8 @@
             <span class="form__error"><?=$err_message['message']?></span>
         </div>
 
-        <?php if ($url_file): ?>
-        <div class="form__item form__item--file form__item--uploaded">
+        <?php if (in_array('lot_photo', $errors)) : ?>
+        <div class="form__item form__item--file form__item--invalid"> <!--form__item--uploaded-->
         <?php else: ?>
         <div class="form__item form__item--file">
         <?php endif; ?>
@@ -67,7 +67,7 @@
             <div class="preview">
                 <button class="preview__remove" type="button">x</button>
                 <div class="preview__img">
-                    <img src="<?=$url_file?>" width="113" height="113" alt="Изображение лота">
+                    <img src="..<?=$url_file?>" width="113" height="113" alt="Изображение лота">
                 </div>
             </div>
             <div class="form__input-file">
@@ -75,8 +75,8 @@
                 <label for="photo2">
                     <span>+ Добавить</span>
                 </label>
+                <span class="form__error"><?=$err_message['lot_photo']?></span>
             </div>
-            <span class="form__error"><?=$err_message['lot_photo']?></span>
         </div>
         <div class="form__container-three">
 

@@ -10,7 +10,6 @@ $numbers = ['lot-rate', 'lot-step'];
 $text = ['lot-name', 'message'];
 $errors = [];
 $err_messages = [];
-//$category = 'Выберите категорию';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
@@ -67,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'lot_rate_value' => $lot_rate,
         'lot_step_value' => $lot_step,
         'lot_date_value' => $lot_date,
+        'url' => $url_file,
         'errors' => $errors,
         'err_message' => $err_message
     ]);
