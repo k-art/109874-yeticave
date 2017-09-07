@@ -36,11 +36,13 @@
                 <label for="category">Категория</label>
                 <select id="category" name="category" > <!--required-->
                     <option>Выберите категорию</option>
-                    <?php
-                    foreach ($categories as $value) {
-                        print("<option>$value</option>");
-                    }
-                    ?>
+                    <?php foreach ($categories as $value): ?>
+                        <?php if ($selected_category === $value): ?>
+                            <option selected><?=$value;?></option>
+                        <?php else: ?>
+                            <option><?=$value;?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </select>
                 <span class="form__error"><?=$err_message['category']?></span>
             </div>
@@ -52,23 +54,29 @@
         <div class="form__item form__item--wide">
         <?php endif; ?>
             <label for="message">Описание</label>
-            <textarea id="message" name="message" placeholder="Напишите описание лота" ></textarea> <!--required-->
+            <textarea id="message" name="message" placeholder="Напишите описание лота" ><?=$lot_message_value?></textarea> <!--required-->
             <span class="form__error"><?=$err_message['message']?></span>
         </div>
-        <div class="form__item form__item--file"> <!-- form__item--uploaded -->
+
+        <?php if ($url_file): ?>
+        <div class="form__item form__item--file form__item--uploaded">
+        <?php else: ?>
+        <div class="form__item form__item--file">
+        <?php endif; ?>
             <label>Изображение</label>
             <div class="preview">
                 <button class="preview__remove" type="button">x</button>
                 <div class="preview__img">
-                    <img src="../img/avatar.jpg" width="113" height="113" alt="Изображение лота">
+                    <img src="<?=$url_file?>" width="113" height="113" alt="Изображение лота">
                 </div>
             </div>
             <div class="form__input-file">
-                <input class="visually-hidden" type="file" id="photo2" value="">
+                <input class="visually-hidden" type="file" id="photo2" name="lot_photo" value="">
                 <label for="photo2">
                     <span>+ Добавить</span>
                 </label>
             </div>
+            <span class="form__error"><?=$err_message['lot_photo']?></span>
         </div>
         <div class="form__container-three">
 
@@ -78,7 +86,7 @@
             <div class="form__item form__item--small">
             <?php endif; ?>
                 <label for="lot-rate">Начальная цена</label>
-                <input id="lot-rate" name="lot-rate" placeholder="0" > <!--type="number" required-->
+                <input id="lot-rate" name="lot-rate" placeholder="0" value="<?=$lot_rate_value?>"> <!--type="number" required-->
                 <span class="form__error"><?=$err_message['lot-rate']?></span>
             </div>
 
@@ -88,7 +96,7 @@
             <div class="form__item form__item--small">
             <?php endif; ?>
                 <label for="lot-step">Шаг ставки</label>
-                <input id="lot-step" name="lot-step" placeholder="0" > <!--type="number" required-->
+                <input id="lot-step" name="lot-step" placeholder="0" value="<?=$lot_step_value?>"> <!--type="number" required-->
                 <span class="form__error"><?=$err_message['lot-step']?></span>
             </div>
 
@@ -98,7 +106,7 @@
             <div class="form__item">
             <?php endif; ?>
                 <label for="lot-date">Дата завершения</label>
-                <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017" > <!--required-->
+                <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017" value="<?=$lot_date_value?>"> <!--required-->
                 <span class="form__error"><?=$err_message['lot-date']?></span>
             </div>
         </div>

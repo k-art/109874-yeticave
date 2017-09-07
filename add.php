@@ -6,10 +6,11 @@ $title = 'Добавление лота';
 
 //Проверка формы
 $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
-$numbers = ['lot-rate', 'lot-step', 'lot-date'];
+$numbers = ['lot-rate', 'lot-step'];
 $text = ['lot-name', 'message'];
 $errors = [];
 $err_messages = [];
+//$category = 'Выберите категорию';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
@@ -19,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $err_message[$key] = 'Заполните это поле';
         }
         if ($key === 'category' && $value === 'Выберите категорию') {
+            $errors[] = $key;
             $err_message[$key] = 'Выберите категорию';
         }
         if (in_array($key, $numbers) && !($value == '')) {
@@ -30,14 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-    $content = render_template('add', [
-        'categories' => $categories,
-        'lots' => [],
-        'bets' => [],
-        'lot_name_value' => '',
-        'errors' => $errors,
-        'err_message' => $err_message
-    ]);
+    if (isset($_FILES['lot_photo'])) {
+        $file_name = $_FILES['lot_photo']['name'];
+        $file_path = __DIR__ . '/img/';
+        $file_type = $_FILES['lot_photo']['type'];
+
+        if ($file_type === 'image/jpeg') {
+            move_uploaded_file($_FILES['lot_photo']['tmp_name'], $file_path . $file_name);
+            $new_file_url = '/img/' . $file_name;
+        }
+        else {
+            $errors[] = 'lot_photo';
+            $err_message['lot_photo'] = 'Загрузите фото в формате jpg';
+        }
+
+        $url_file = '/img/' . $file_name;
+    }
 
     $lot_name = filter_text($_POST['lot-name']);
     $message = filter_text($_POST['message']);
@@ -46,15 +56,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot_step = $_POST['lot-step'];
     $lot_date = $_POST['lot-date'];
 
-    if (isset($_FILES['item_photo'])) {
-        $file_name = $_FILES['item_photo']['name'];
-        $file_path = __DIR__ . '/img/';
-        $file_type = $_FILES['item_photo']['type'];
 
-        move_uploaded_file($_FILES['item_photo']['tmp_name'], $file_path . $file_name);
+    $content = render_template('add', [
+        'categories' => $categories,
+        'lots' => [],
+        'bets' => [],
+        'lot_name_value' => $lot_name,
+        'lot_message_value' => $message,
+        'selected_category' => $category,
+        'lot_rate_value' => $lot_rate,
+        'lot_step_value' => $lot_step,
+        'lot_date_value' => $lot_date,
+        'errors' => $errors,
+        'err_message' => $err_message
+    ]);
 
-        $url_file = '/img/' . $file_name;
-    }
     if (empty($errors)) {
         $new_lot = [
             [
