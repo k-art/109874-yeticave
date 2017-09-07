@@ -3,55 +3,99 @@ require_once ('functions.php');
 require_once ('lots_data.php');
 
 $title = 'Добавление лота';
-$categories = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-
-$lot_data = [
-    'categories' => $categories,
-    'lots' => $lots,
-    'bets' => $bets
-];
 
 //Проверка формы
 $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
-$rules = ['lot-rate', 'lot-step'];
+$numbers = ['lot-rate', 'lot-step', 'lot-date'];
+$text = ['lot-name', 'message'];
 $errors = [];
+$err_messages = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
+
         if (in_array($key, $required) && $value == '') {
             $errors[] = $key;
-            break;
+            $err_message[$key] = 'Заполните это поле';
         }
-        if (in_array($key, $rules)) {
-            $result = filter_var($value, FILTER_VALIDATE_INT);
+        if ($key === 'category' && $value === 'Выберите категорию') {
+            $err_message[$key] = 'Выберите категорию';
+        }
+        if (in_array($key, $numbers) && !($value == '')) {
+            $result = call_user_func('validate_number', $value);
+
             if (!$result) {
                 $errors[] = $key;
+                $err_message[$key] = 'Введите число';
             }
         }
     }
-}
-if (!count($errors)) {
-    header('Location: /add.php?success=true');
-}
+    $content = render_template('add', [
+        'categories' => $categories,
+        'lots' => [],
+        'bets' => [],
+        'lot_name_value' => '',
+        'errors' => $errors,
+        'err_message' => $err_message
+    ]);
 
-if (isset($_GET['success'])) {
+    $lot_name = filter_text($_POST['lot-name']);
+    $message = filter_text($_POST['message']);
+    $category = filter_text($_POST['category']);
+    $lot_rate = $_POST['lot-rate'];
+    $lot_step = $_POST['lot-step'];
+    $lot_date = $_POST['lot-date'];
 
-    $content = render_template('lot', $lot_data);
+    if (isset($_FILES['item_photo'])) {
+        $file_name = $_FILES['item_photo']['name'];
+        $file_path = __DIR__ . '/img/';
+        $file_type = $_FILES['item_photo']['type'];
 
-    foreach ($_POST as $key => $value) {
-        print("Поле $key со значением $value\n");
+        move_uploaded_file($_FILES['item_photo']['tmp_name'], $file_path . $file_name);
+
+        $url_file = '/img/' . $file_name;
     }
+    if (empty($errors)) {
+        $new_lot = [
+            [
+                'name' => $lot_name,
+                'category' => $category,
+                'price' => $lot_rate,
+                'url' => $url_file,
+                'description' => $message,
+                'id' => 0
+            ]
+        ];
+        $lot_data['lots'] = $new_lot;
+
+        $content = render_template('lot',
+            [
+                'categories' => $categories,
+                'lots' => $new_lot,
+                'id' => 0,
+                'bets' => []
+            ]
+        );
+    }
+
 }
 else {
-    $content = render_template('add', ['categories' => $categories]);
+    $lot_data = [
+        'categories' => $categories,
+        'lots' => [],
+        'bets' => [],
+        'lot_name_value' => '',
+        'errors' => $errors
+    ];
+    $content = render_template('add', $lot_data);
 }
 
-
 $layout_data = [
-    'title' => $title,
-    'user_name' => $user_name,
-    'user_avatar' => $user_avatar,
-    'is_auth' => $is_auth,
+    'title' => 'Добавление лота',
+    'categories' => $categories,
+    'user_name' => 'Константин',
+    'user_avatar' => 'img/user.jpg',
+    'is_auth' => (bool) rand(0, 1),
     'content' => $content
 ];
 

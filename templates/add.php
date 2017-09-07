@@ -1,60 +1,59 @@
 <main>
     <nav class="nav">
         <ul class="nav__list container">
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[0]?></a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[1]?></a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[2]?></a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[3]?></a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[4]?></a>
-            </li>
-            <li class="nav__item">
-                <a href="all-lots.html"><?=$categories[5]?></a>
-            </li>
+            <?php
+            foreach ($categories as $value) : ?>
+                <li class="nav__item">
+                    <a href="all-lots.html"><?=$value?></a>
+                </li>
+            <?php endforeach; ?>
         </ul>
     </nav>
 
-    <?php
-    // Двойной вопрос мне можно использовать? PhpStorm ругает за ошибку, говорит только в 7й версии
-    $lot_name_value = $_POST['name'] ?? '';
-
-
-    ?>
-
-    <form class="form form--add-lot container" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+    <?php if (!empty($errors)) : ?>
+    <form class="form form--add-lot container form--invalid" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
+    <?php else : ?>
+    <form class="form form--add-lot container" action="add.php" method="post" enctype="multipart/form-data">
+    <?php endif; ?>
         <h2>Добавление лота</h2>
         <div class="form__container-two">
-            <div class="form__item"> <!-- form__item--invalid -->
-                <label for="lot-name">Наименование</label>
-                <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" required value="<?=$lot_name_value?>">
-                <span class="form__error"></span>
-            </div>
+
+            <?php if (in_array('lot-name', $errors)) : ?>
+            <div class="form__item form__item--invalid"> <!-- form__item--invalid -->
+            <?php else : ?>
             <div class="form__item">
+            <?php endif; ?>
+                <label for="lot-name">Наименование</label>
+                <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=$lot_name_value?>"> <!--required-->
+                <span class="form__error"><?=$err_message['lot-name']?></span>
+            </div>
+
+            <?php if (in_array('category', $errors)) : ?>
+            <div class="form__item form__item--invalid">
+            <?php else : ?>
+            <div class="form__item">
+            <?php endif; ?>
                 <label for="category">Категория</label>
-                <select id="category" name="category" required>
+                <select id="category" name="category" > <!--required-->
                     <option>Выберите категорию</option>
-                    <option><?=$categories[0]?></option>
-                    <option><?=$categories[1]?></option>
-                    <option><?=$categories[2]?></option>
-                    <option><?=$categories[3]?></option>
-                    <option><?=$categories[4]?></option>
-                    <option><?=$categories[5]?></option>
+                    <?php
+                    foreach ($categories as $value) {
+                        print("<option>$value</option>");
+                    }
+                    ?>
                 </select>
-                <span class="form__error"></span>
+                <span class="form__error"><?=$err_message['category']?></span>
             </div>
         </div>
+
+        <?php if (in_array('message', $errors)) : ?>
+        <div class="form__item form__item--wide form__item--invalid">
+        <?php else : ?>
         <div class="form__item form__item--wide">
+        <?php endif; ?>
             <label for="message">Описание</label>
-            <textarea id="message" name="message" placeholder="Напишите описание лота" required></textarea>
-            <span class="form__error"></span>
+            <textarea id="message" name="message" placeholder="Напишите описание лота" ></textarea> <!--required-->
+            <span class="form__error"><?=$err_message['message']?></span>
         </div>
         <div class="form__item form__item--file"> <!-- form__item--uploaded -->
             <label>Изображение</label>
@@ -72,20 +71,35 @@
             </div>
         </div>
         <div class="form__container-three">
+
+            <?php if (in_array('lot-rate', $errors)) : ?>
+            <div class="form__item form__item--small form__item--invalid">
+            <?php else : ?>
             <div class="form__item form__item--small">
+            <?php endif; ?>
                 <label for="lot-rate">Начальная цена</label>
-                <input id="lot-rate" type="number" name="lot-rate" placeholder="0" required>
-                <span class="form__error"></span>
+                <input id="lot-rate" name="lot-rate" placeholder="0" > <!--type="number" required-->
+                <span class="form__error"><?=$err_message['lot-rate']?></span>
             </div>
+
+            <?php if (in_array('lot-step', $errors)) : ?>
+            <div class="form__item form__item--small form__item--invalid">
+            <?php else : ?>
             <div class="form__item form__item--small">
+            <?php endif; ?>
                 <label for="lot-step">Шаг ставки</label>
-                <input id="lot-step" type="number" name="lot-step" placeholder="0" required>
-                <span class="form__error"></span>
+                <input id="lot-step" name="lot-step" placeholder="0" > <!--type="number" required-->
+                <span class="form__error"><?=$err_message['lot-step']?></span>
             </div>
+
+            <?php if (in_array('lot-date', $errors)) : ?>
+            <div class="form__item form__item--invalid">
+            <?php else : ?>
             <div class="form__item">
+            <?php endif; ?>
                 <label for="lot-date">Дата завершения</label>
-                <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017" required>
-                <span class="form__error"></span>
+                <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017" > <!--required-->
+                <span class="form__error"><?=$err_message['lot-date']?></span>
             </div>
         </div>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
