@@ -13,4 +13,25 @@ function render_template ($file_name, $data) {
     }
     return '';
 }
-?>
+function format_time ($time_stamp) {
+    $now = strtotime('now');
+    $past_time = $now - $time_stamp ;
+    $time_24h = 86400;
+    $time_1h = 3600;
+
+    if ($past_time > $time_24h) {
+        return gmdate('d.m.y в H:i', $time_stamp);
+    }
+    elseif ($past_time < $time_1h) {
+        return gmdate('i минут назад', $past_time);
+    }
+    else {
+        return gmdate('G часов назад', $past_time);
+    }
+}
+function validate_number($value) {
+    return filter_var($value, FILTER_VALIDATE_INT);
+}
+function filter_text($value) {
+    return trim(htmlspecialchars($value));
+}

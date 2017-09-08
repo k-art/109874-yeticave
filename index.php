@@ -1,9 +1,11 @@
 <?php
+require_once ('functions.php');
+require_once ('lots_data.php');
+
 $title = 'Главная';
 
 $user_name = 'Константин';
 $user_avatar = 'img/user.jpg';
-
 $is_auth = (bool) rand(0, 1);
 
 // устанавливаем часовой пояс в Московское время
@@ -23,12 +25,6 @@ $now = strtotime('now');
 
 $lot_time_remaining = gmdate('H:i',$tomorrow - $now);
 
-
-$categories = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
-
-require_once ('lots_data.php');
-require_once ('functions.php');
-
 $index_data = [
     'categories' => $categories,
     'lots' => $lots,
@@ -39,6 +35,7 @@ $content = render_template('index', $index_data);
 
 $layout_data = [
     'title' => $title,
+    'categories' => $categories,
     'user_name' => $user_name,
     'user_avatar' => $user_avatar,
     'is_auth' => $is_auth,
@@ -48,4 +45,3 @@ $layout_data = [
 $layout_template = render_template('layout', $layout_data);
 
 print ($layout_template);
-?>
