@@ -1,4 +1,5 @@
 <?php
+error_reporting( E_ALL);
 require_once ('functions.php');
 require_once ('lots_data.php');
 
@@ -11,23 +12,24 @@ $text = ['lot-name', 'message'];
 $errors = [];
 $err_messages = [];
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
 
         if (in_array($key, $required) && $value == '') {
             $errors[] = $key;
-            $err_message[$key] = 'Заполните это поле';
+            $err_messages[$key] = 'Заполните это поле';
         }
         if ($key === 'category' && $value === 'Выберите категорию') {
             $errors[] = $key;
-            $err_message[$key] = 'Выберите категорию';
+            $err_messages[$key] = 'Выберите категорию';
         }
         if (in_array($key, $numbers) && !($value == '')) {
             $result = call_user_func('validate_number', $value);
 
             if (!$result) {
                 $errors[] = $key;
-                $err_message[$key] = 'Введите число';
+                $err_messages[$key] = 'Введите число';
             }
         }
     }
@@ -35,14 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $file_name = $_FILES['lot_photo']['name'];
         $file_path = __DIR__ . '/img/';
         $file_type = $_FILES['lot_photo']['type'];
+        $file_size = $_FILES['lot_photo']['size'];
 
-        if ($file_type === 'image/jpeg') {
-            move_uploaded_file($_FILES['lot_photo']['tmp_name'], $file_path . $file_name);
-            $new_file_url = '/img/' . $file_name;
+        if ($file_type !== 'image/jpeg') {
+            $errors[] = 'lot_photo';
+            $err_messages['lot_photo'] = 'Загрузите фото в формате jpg';
+        }
+        elseif ($file_size > 200000) {
+            $errors[] = 'lot_photo';
+            $err_messages['lot_photo'] = 'Максимальный размер файла: 200кб';
         }
         else {
-            $errors[] = 'lot_photo';
-            $err_message['lot_photo'] = 'Загрузите фото в формате jpg';
+            move_uploaded_file($_FILES['lot_photo']['tmp_name'], $file_path . $file_name);
+            $new_file_url = '/img/' . $file_name;
         }
 
         $url_file = '/img/' . $file_name;
@@ -68,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'lot_date_value' => $lot_date,
         'url' => $url_file,
         'errors' => $errors,
-        'err_message' => $err_message
+        'err_messages' => $err_messages
     ]);
 
     if (empty($errors)) {
@@ -101,7 +108,12 @@ else {
         'lots' => [],
         'bets' => [],
         'lot_name_value' => '',
-        'errors' => $errors
+        'lot_message_value' => '',
+        'lot_rate_value' => '',
+        'lot_step_value' => '',
+        'lot_date_value' => '',
+        'errors' => $errors,
+        'err_messages' => $err_messages
     ];
     $content = render_template('add', $lot_data);
 }

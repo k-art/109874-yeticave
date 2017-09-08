@@ -25,7 +25,7 @@
             <?php endif; ?>
                 <label for="lot-name">Наименование</label>
                 <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=$lot_name_value?>"> <!--required-->
-                <span class="form__error"><?=$err_message['lot-name']?></span>
+                <span class="form__error"><?=$err_messages['lot-name']?></span>
             </div>
 
             <?php if (in_array('category', $errors)) : ?>
@@ -44,7 +44,7 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
-                <span class="form__error"><?=$err_message['category']?></span>
+                <span class="form__error"><?=$err_messages['category']?></span>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
         <?php endif; ?>
             <label for="message">Описание</label>
             <textarea id="message" name="message" placeholder="Напишите описание лота" ><?=$lot_message_value?></textarea> <!--required-->
-            <span class="form__error"><?=$err_message['message']?></span>
+            <span class="form__error"><?=$err_messages['message']?></span>
         </div>
 
         <?php if (in_array('lot_photo', $errors)) : ?>
@@ -75,7 +75,7 @@
                 <label for="photo2">
                     <span>+ Добавить</span>
                 </label>
-                <span class="form__error"><?=$err_message['lot_photo']?></span>
+                <span class="form__error"><?=$err_messages['lot_photo']?></span>
             </div>
         </div>
         <div class="form__container-three">
@@ -87,7 +87,7 @@
             <?php endif; ?>
                 <label for="lot-rate">Начальная цена</label>
                 <input id="lot-rate" name="lot-rate" placeholder="0" value="<?=$lot_rate_value?>"> <!--type="number" required-->
-                <span class="form__error"><?=$err_message['lot-rate']?></span>
+                <span class="form__error"><?=$err_messages['lot-rate']?></span>
             </div>
 
             <?php if (in_array('lot-step', $errors)) : ?>
@@ -97,7 +97,7 @@
             <?php endif; ?>
                 <label for="lot-step">Шаг ставки</label>
                 <input id="lot-step" name="lot-step" placeholder="0" value="<?=$lot_step_value?>"> <!--type="number" required-->
-                <span class="form__error"><?=$err_message['lot-step']?></span>
+                <span class="form__error"><?=$err_messages['lot-step']?></span>
             </div>
 
             <?php if (in_array('lot-date', $errors)) : ?>
@@ -107,7 +107,7 @@
             <?php endif; ?>
                 <label for="lot-date">Дата завершения</label>
                 <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="20.05.2017" value="<?=$lot_date_value?>"> <!--required-->
-                <span class="form__error"><?=$err_message['lot-date']?></span>
+                <span class="form__error"><?=$err_messages['lot-date']?></span>
             </div>
         </div>
         <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
