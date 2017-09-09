@@ -35,3 +35,17 @@ function validate_number($value) {
 function filter_text($value) {
     return trim(htmlspecialchars($value));
 }
+function validate_email($value) {
+    return filter_var($value, FILTER_VALIDATE_EMAIL);
+}
+function searchUserByEmail($email, $users)
+{
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
+}

@@ -4,9 +4,9 @@ require_once ('lots_data.php');
 
 $title = 'Главная';
 
-$user_name = 'Константин';
-$user_avatar = 'img/user.jpg';
-$is_auth = (bool) rand(0, 1);
+//$user_name = 'Константин';
+//$user_avatar = 'img/user.jpg';
+//$is_auth = (bool) rand(0, 1);
 
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
@@ -36,9 +36,9 @@ $content = render_template('index', $index_data);
 $layout_data = [
     'title' => $title,
     'categories' => $categories,
-    'user_name' => $user_name,
-    'user_avatar' => $user_avatar,
-    'is_auth' => $is_auth,
+//    'user_name' => $user_name,
+//    'user_avatar' => $user_avatar,
+//    'is_auth' => $is_auth,
     'content' => $content
 ];
 

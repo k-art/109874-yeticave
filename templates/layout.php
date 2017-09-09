@@ -11,7 +11,11 @@
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
+        <?php if($title === 'Главная') : ?>
         <a class="main-header__logo">
+        <?php else : ?>
+        <a class="main-header__logo" href="index.php">
+        <?php endif; ?>
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" method="get" action="https://echo.htmlacademy.ru">
@@ -22,26 +26,22 @@
 
         <nav class="user-menu">
 
-            <?php if ($is_auth) : ?>
-
+            <?php if (isset($_SESSION['user'])): ?>
                 <div class="user-menu__image">
-                    <img src="<?=$user_avatar; ?>" width="40" height="40" alt="Пользователь">
+                    <img src="img/user.jpg" width="40" height="40" alt="Пользователь">
                 </div>
                 <div class="user-menu__logged">
-                    <p><?=$user_name; ?></p>
+                    <p><?=$_SESSION['user']['name']; ?></p>
                 </div>
-
             <?php else : ?>
-
                 <ul class="user-menu__list">
                     <li class="user-menu__item">
                         <a href="#">Регистрация</a>
                     </li>
                     <li class="user-menu__item">
-                        <a href="#">Вход</a>
+                        <a href="login.php">Вход</a>
                     </li>
                 </ul>
-
             <?php endif; ?>
         </nav>
     </div>
