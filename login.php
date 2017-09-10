@@ -1,5 +1,4 @@
 <?php
-error_reporting( E_ALL);
 require_once ('functions.php');
 require_once ('lots_data.php');
 require_once ('user_data.php');
@@ -7,7 +6,10 @@ require_once ('user_data.php');
 $title = 'Вход';
 $fields_required = ['email', 'password'];
 $errors = [];
-$err_messages = [];
+$err_messages = [
+    'password' => '',
+    'email' => ''
+];
 $user = '';
 
 
@@ -39,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if (empty($errors)) {
-        session_start();
-
         if ($user = searchUserByEmail($email_received, $users)) {
             $password_hash = $user['password'];
 
@@ -51,7 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             else {
                 $errors[] = 'password';
                 $err_messages['password'] = 'Вы ввели неверный пароль';
+                $err_messages['email'] = '';
             }
+        }
+        else {
+            $errors[] = 'email';
+            $errors[] = 'password';
+            $err_messages['email'] = 'Вы ввели неверные данные';
+            $err_messages['password'] = 'Вы ввели неверные данные';
         }
     }
 

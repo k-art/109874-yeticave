@@ -1,4 +1,6 @@
 <?php
+error_reporting( E_ALL);
+
 function render_template ($file_name, $data) {
     $templates_dir = 'templates/';
     $template_ext = '.php';
@@ -49,3 +51,10 @@ function searchUserByEmail($email, $users)
     }
     return $result;
 }
+function init_session() {
+    if (!session_start()) {
+        print "я закрылась";
+        throw new Exeption('Can\'t start session');
+    }
+}
+init_session();

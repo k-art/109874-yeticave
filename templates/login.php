@@ -22,7 +22,9 @@
         <?php endif; ?>
             <label for="email">E-mail*</label>
             <input id="email" type="text" name="email" placeholder="Введите e-mail">
+            <?php if (!empty($errors)) : ?>
             <span class="form__error"><?=$err_messages['email']?></span> <!--Введите e-mail-->
+            <?php endif; ?>
         </div>
         <?php if (!empty($errors)) : ?>
         <div class="form__item form__item--last form__item--invalid"> <!-- form__item--invalid -->
@@ -31,7 +33,9 @@
         <?php endif; ?>
             <label for="password">Пароль*</label>
             <input id="password" type="text" name="password" placeholder="Введите пароль">
+            <?php if (!empty($errors)) : ?>
             <span class="form__error"><?=$err_messages['password']?></span>
+            <?php endif; ?>
         </div>
         <button type="submit" class="button">Войти</button>
     </form>

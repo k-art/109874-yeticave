@@ -32,7 +32,11 @@
                 </div>
                 <div class="user-menu__logged">
                     <p><?=$_SESSION['user']['name']; ?></p>
+                    <a href="logout.php">Выход</a>
                 </div>
+<!--                <li class="user-menu__item">-->
+<!--                    <a href="login.php">Выход</a>-->
+<!--                </li>-->
             <?php else : ?>
                 <ul class="user-menu__list">
                     <li class="user-menu__item">
