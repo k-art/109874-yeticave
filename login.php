@@ -12,6 +12,10 @@ $err_messages = [
 ];
 $user = '';
 
+if (isset($_SESSION['user'])) {
+    header("Location: /index.php");
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
