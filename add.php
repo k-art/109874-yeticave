@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 }
-else {
+if (isset($_SESSION['user'])) {
     $lot_data = [
         'categories' => $categories,
         'lots' => [],
@@ -117,13 +117,18 @@ else {
     ];
     $content = render_template('add', $lot_data);
 }
+else {
+
+    $content = render_template('errors', ['categories' => $categories]);
+    http_response_code(403);
+}
 
 $layout_data = [
     'title' => 'Добавление лота',
     'categories' => $categories,
-    'user_name' => 'Константин',
-    'user_avatar' => 'img/user.jpg',
-    'is_auth' => (bool) rand(0, 1),
+//    'user_name' => 'Константин',
+//    'user_avatar' => 'img/user.jpg',
+//    'is_auth' => (bool) rand(0, 1),
     'content' => $content
 ];
 

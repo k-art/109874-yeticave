@@ -1,4 +1,6 @@
 <?php
+error_reporting( E_ALL);
+
 function render_template ($file_name, $data) {
     $templates_dir = 'templates/';
     $template_ext = '.php';
@@ -35,3 +37,24 @@ function validate_number($value) {
 function filter_text($value) {
     return trim(htmlspecialchars($value));
 }
+function validate_email($value) {
+    return filter_var($value, FILTER_VALIDATE_EMAIL);
+}
+function searchUserByEmail($email, $users)
+{
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
+}
+function init_session() {
+    if (!session_start()) {
+        print "я закрылась";
+        throw new Exeption('Can\'t start session');
+    }
+}
+init_session();
