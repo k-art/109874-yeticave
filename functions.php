@@ -1,6 +1,18 @@
 <?php
 error_reporting( E_ALL);
 
+// устанавливаем часовой пояс в Московское время
+date_default_timezone_set('Europe/Moscow');
+
+function set_lot_time_remaining () {
+    // временная метка для полночи следующего дня
+    $tomorrow = strtotime('tomorrow midnight');
+    // временная метка для настоящего времени
+    $now = strtotime('now');
+
+    return gmdate('H:i',$tomorrow - $now);
+}
+
 function render_template ($file_name, $data) {
     $templates_dir = 'templates/';
     $template_ext = '.php';
