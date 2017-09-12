@@ -18,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user_bets = json_encode(['cost' => $cost, 'id' => $id, 'date' => $date]);
 
         setcookie('user_bets', $user_bets, strtotime('Mon, 25-Jan-2027 10:00:00 GMT'), '/');
-//        print_r($user_bets_data);
+//      Данные добавляются, но перезаписываются.
 
         header("Location: /mylots.php");
     }
     else {
+//      Не получается правильно вернуться на страницу и показать ошибку
         $err_message = 'Ваша ставка не действительна';
         header("Location: /lot.php?id=$id");
     }
