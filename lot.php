@@ -7,6 +7,12 @@ $id = '';
 $user_bets_data = [];
 $cost = '';
 $err_message = '';
+$user_bets = [];
+$is_bet_exist = false;
+
+if (isset($_COOKIE['user_bets'])) {
+    $user_bets = json_decode($_COOKIE['user_bets'], true);
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['lot-id'];
@@ -15,11 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['cost']) && $_POST['cost'] != '' && validate_number($_POST['cost']) && $_POST['cost'] >= 12000) {
         $cost = $_POST['cost'];
 
-        $user_bets = json_encode(['cost' => $cost, 'id' => $id, 'date' => $date]);
+        $user_bet = ['cost' => $cost, 'id' => $id, 'date' => $date];
+        $user_bets[] = $user_bet;
 
-        setcookie('user_bets', $user_bets, strtotime('Mon, 25-Jan-2027 10:00:00 GMT'), '/');
-//      Данные добавляются, но перезаписываются.
-
+        setcookie('user_bets', json_encode($user_bets), strtotime('Mon, 25-Jan-2027 10:00:00 GMT'), '/');
         header("Location: /mylots.php");
     }
     else {
@@ -27,18 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $err_message = 'Ваша ставка не действительна';
         header("Location: /lot.php?id=$id");
     }
-
 }
-
-
-
 
 $lot_data = [
     'categories' => $categories,
     'lots' => $lots,
     'bets' => $bets,
     'id' => $id,
-    'err_message' => $err_message
+    'err_message' => $err_message,
+    'is_bet_exist' => $is_bet_exist,
+    'user_bets' => $user_bets
 ];
 
 $content = render_template('lot', $lot_data);

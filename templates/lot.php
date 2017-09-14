@@ -38,6 +38,13 @@
                             Мин. ставка <span>12 000 р</span>
                         </div>
                     </div>
+                    <?php
+                    foreach ($user_bets as $bet) {
+                        if ($bet["id"] === $_GET['id']) {
+                            $is_bet_exist = true;
+                        }
+                    }
+                    if (!$is_bet_exist) : ?>
                     <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
                             <label for="cost">Ваша ставка</label>
@@ -48,6 +55,7 @@
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <div class="history">
@@ -65,14 +73,14 @@
                 </div>
             </div>
         </div>
-        <?php else :
+<!--        --><?php //else :
 //
 //      Проверка в лоте на 404 конфликтует с переадресацией на mylots.php при добавлении новой ставки.
 //      Заккоментировал пока. Как ее лучше организовать?
 //
 //            http_response_code(404);
 //            print("<h2>Такой страницы не существует</h2>");
-            ?>
+//            ?>
         <?php endif; ?>
     </section>
 </main>
