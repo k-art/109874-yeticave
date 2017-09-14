@@ -10,10 +10,6 @@
         </ul>
     </nav>
     <section class="lot-item container">
-        <?php
-        if (isset($_GET['id']) &&  is_numeric($_GET['id']) && $_GET['id'] < count($lots)) :
-            $id = $_GET['id']; ?>
-
         <h2><?=$lots[$id]['name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
@@ -73,14 +69,5 @@
                 </div>
             </div>
         </div>
-<!--        --><?php //else :
-//
-//      Проверка в лоте на 404 конфликтует с переадресацией на mylots.php при добавлении новой ставки.
-//      Заккоментировал пока. Как ее лучше организовать?
-//
-//            http_response_code(404);
-//            print("<h2>Такой страницы не существует</h2>");
-//            ?>
-        <?php endif; ?>
     </section>
 </main>

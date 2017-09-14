@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['lot-id'];
     $date = $_POST['date'];
 
-    if(isset($_POST['cost']) && $_POST['cost'] != '' && validate_number($_POST['cost']) && $_POST['cost'] >= 12000) {
+//    if(isset($_POST['cost']) && $_POST['cost'] != '' && validate_number($_POST['cost']) && $_POST['cost'] >= 12000) {
         $cost = $_POST['cost'];
 
         $user_bet = ['cost' => $cost, 'id' => $id, 'date' => $date];
@@ -26,25 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         setcookie('user_bets', json_encode($user_bets), strtotime('Mon, 25-Jan-2027 10:00:00 GMT'), '/');
         header("Location: /mylots.php");
-    }
-    else {
-//      Не получается правильно вернуться на страницу и показать ошибку
-        $err_message = 'Ваша ставка не действительна';
-        header("Location: /lot.php?id=$id");
-    }
+//    }
+//    else {
+////      Не получается правильно вернуться на страницу и показать ошибку
+//        $err_message = 'Ваша ставка не действительна';
+//        header("Location: /lot.php?id=$id");
+//    }
 }
 
-$lot_data = [
-    'categories' => $categories,
-    'lots' => $lots,
-    'bets' => $bets,
-    'id' => $id,
-    'err_message' => $err_message,
-    'is_bet_exist' => $is_bet_exist,
-    'user_bets' => $user_bets
-];
+elseif (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] >= count($lots)) {
+    http_response_code(404);
+    $content = "<h2>Error 404<br>Такой страницы не существует</h2>";
 
-$content = render_template('lot', $lot_data);
+}
+else {
+    $id = $_GET['id'];
+
+    $lot_data = [
+        'categories' => $categories,
+        'lots' => $lots,
+        'bets' => $bets,
+        'id' => $id,
+        'err_message' => $err_message,
+        'is_bet_exist' => $is_bet_exist,
+        'user_bets' => $user_bets
+    ];
+
+    $content = render_template('lot', $lot_data);
+}
 
 $layout_data = [
     'title' => $title,
