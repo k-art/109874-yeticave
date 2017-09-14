@@ -25,9 +25,6 @@
         <h2>Мои ставки</h2>
         <table class="rates__list">
             <?php foreach ($user_bets as $bet) : ?>
-                <?=$bet['id']?>
-                <?=$bet['cost']?>
-                <?=$bet['date']?>
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">

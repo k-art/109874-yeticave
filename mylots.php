@@ -11,13 +11,10 @@ if (!isset($_SESSION['user'])) {
 
 if (isset($_COOKIE['user_bets'])) {
     $user_bets = json_decode($_COOKIE['user_bets'], true);
-    print_r($user_bets);
 }
-//else {
-//    $user_bets = [];
-//}
-
-
+else {
+    $user_bets = [];
+}
 
 $content = render_template('mylots', [
     'categories' => $categories,
