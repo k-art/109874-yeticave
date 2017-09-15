@@ -10,15 +10,6 @@
         </ul>
     </nav>
     <section class="lot-item container">
-        <?php
-        if (isset($_GET['id']) &&  is_numeric($_GET['id'])) {
-            $id = $_GET['id'];
-        }
-        if (!array_key_exists($id, $lots)) {
-            http_response_code(404);
-            print("Такой страницы не существует");
-        }
-        ?>
         <h2><?=$lots[$id]['name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
@@ -32,7 +23,7 @@
                 <?php if (isset($_SESSION['user'])): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
-                        10:54:12
+                        <?=set_lot_time_remaining();?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
@@ -43,13 +34,24 @@
                             Мин. ставка <span>12 000 р</span>
                         </div>
                     </div>
-                    <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
+                    <?php
+                    foreach ($user_bets as $bet) {
+                        if ($bet["id"] === $_GET['id']) {
+                            $is_bet_exist = true;
+                        }
+                    }
+                    if (!$is_bet_exist) : ?>
+                    <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
+                            <span class="form__error"><?=$validation_errors['cost'];?></span>
                             <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="number" name="cost" placeholder="12 000">
+                            <input id="cost" type="number" name="cost" placeholder="12 000" value="<?=$_POST['cost']?>">
+                            <input type="hidden" name="lot-id" value="<?=$_GET['id']?>">
+                            <input type="hidden" name="date" value="<?=strtotime('now');?>">
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <div class="history">

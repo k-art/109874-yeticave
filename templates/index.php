@@ -50,7 +50,7 @@
                                 <span class="lot__cost"><?=htmlspecialchars($value['price']); ?><b class="rub">р</b></span>
                             </div>
                             <div class="lot__timer timer">
-                                <?=$lot_time_remaining;?>
+                                <?=set_lot_time_remaining();?>
                             </div>
                         </div>
                     </div>

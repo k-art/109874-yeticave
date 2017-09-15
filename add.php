@@ -1,5 +1,4 @@
 <?php
-error_reporting( E_ALL);
 require_once ('functions.php');
 require_once ('lots_data.php');
 
@@ -126,9 +125,6 @@ else {
 $layout_data = [
     'title' => 'Добавление лота',
     'categories' => $categories,
-//    'user_name' => 'Константин',
-//    'user_avatar' => 'img/user.jpg',
-//    'is_auth' => (bool) rand(0, 1),
     'content' => $content
 ];
 
