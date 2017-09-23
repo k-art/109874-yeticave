@@ -1,6 +1,7 @@
 <?php
-require_once ('functions.php');
 require_once ('lots_data.php');
+require_once ('functions.php');
+require_once ('init.php');
 
 $title = 'Главная';
 
