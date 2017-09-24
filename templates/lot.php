@@ -43,9 +43,8 @@
                     if (!$is_bet_exist) : ?>
                     <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
-                            <span class="form__error"><?=$validation_errors['cost'];?></span>
                             <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="number" name="cost" placeholder="12 000" value="<?=$_POST['cost']?>">
+                            <input id="cost" type="number" name="cost" placeholder="12 000" value="">
                             <input type="hidden" name="lot-id" value="<?=$_GET['id']?>">
                             <input type="hidden" name="date" value="<?=strtotime('now');?>">
                         </p>
