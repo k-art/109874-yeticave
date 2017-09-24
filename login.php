@@ -1,7 +1,8 @@
 <?php
-require_once ('functions.php');
-require_once ('lots_data.php');
 require_once ('user_data.php');
+require_once ('lots_data.php');
+require_once ('functions.php');
+require_once ('init.php');
 
 $title = 'Вход';
 $fields_required = ['email', 'password'];
