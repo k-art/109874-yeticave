@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS users (
   creation_date DATETIME,
   email VARCHAR(128),
   name VARCHAR(128),
-  password CHAR(32),
+  password CHAR(60),
   avatar VARCHAR(255),
   user_contacts VARCHAR(255)
 );
