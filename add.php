@@ -1,11 +1,9 @@
 <?php
-require_once ('lots_data.php');
 require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Добавление лота';
-$categories = db_select_data($connect, 'SELECT * FROM categories');
-
+$categories = get_all_categories($connect);
 
 //Проверка формы
 $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];

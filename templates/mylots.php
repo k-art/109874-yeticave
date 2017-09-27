@@ -16,18 +16,22 @@
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="<?=$lots[$bet['id']]['url']?>" width="54" height="40" alt="<?=$lots[$bet['id']]['name']?>">
+                        <img src="<?=$bet['lot_image']?>" width="54" height="40" alt="<?=$bet['lot_name']?>">
                     </div>
-                    <h3 class="rates__title"><a href="lot.php?id=<?=$bet['id']?>"><?=$lots[$bet['id']]['name']?></a></h3>
+                    <h3 class="rates__title"><a href="lot.php?id=<?=$bet['lot_id']?>"><?=$bet['lot_name']?></a></h3>
                 </td>
                 <td class="rates__category">
-                    <?=$lots[$bet['id']]['category']?>
+                    <?=$bet['cat_name']?>
                 </td>
                 <td class="rates__timer">
-                    <div class="timer timer--finishing"><?=set_lot_time_remaining()?></div>
+                    <?php if (strtotime($bet['expire_date']) > TIME_24_HOURS) : ?>
+                    <div class="timer"><?=set_lot_time_remaining($bet['expire_date'])?></div>
+                    <?php else: ?>
+                    <div class="timer timer--finishing"><?=set_lot_time_remaining($bet['expire_date'])?></div>
+                    <?php endif; ?>
                 </td>
                 <td class="rates__price">
-                    <?=$bet['cost']?> р
+                    <?=$bet['price']?> р
                 </td>
                 <td class="rates__time">
                     <?=format_time($bet['date'])?>

@@ -10,28 +10,28 @@
         </ul>
     </nav>
     <section class="lot-item container">
-        <h2><?=$lot['lot_name']?></h2>
+        <h2><?=$lot[0]['lot_name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <img src="<?=$lot['lot_image']?>" width="730" height="548" alt="<?=$lot['lot_name']?>">
+                    <img src="<?=$lot[0]['lot_image']?>" width="730" height="548" alt="<?=$lot[0]['lot_name']?>">
                 </div>
-                <p class="lot-item__category">Категория: <span><?=$lot['cat_name']?></span></p>
-                <p class="lot-item__description"><?=$lot['description']?></p>
+                <p class="lot-item__category">Категория: <span><?=$lot[0]['cat_name']?></span></p>
+                <p class="lot-item__description"><?=$lot[0]['description']?></p>
             </div>
             <div class="lot-item__right">
                 <?php if (isset($_SESSION['user'])): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
-                        <?=set_lot_time_remaining($lot['expire_date']);?>
+                        <?=set_lot_time_remaining($lot[0]['expire_date']);?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?=$lot['lot_price']?></span>
+                            <span class="lot-item__cost"><?=$lot[0]['lot_price']?></span>
                         </div>
                         <div class="lot-item__min-cost">
-                            Мин. ставка <span><?=$lot['bet_step']?></span>
+                            Мин. ставка <span><?=$lot[0]['bet_step']?></span>
                         </div>
                     </div>
                     <?php
@@ -54,7 +54,7 @@
                 </div>
                 <?php endif; ?>
                 <div class="history">
-                    <h3>История ставок (<span><?=$lot['bets_count']?></span>)</h3>
+                    <h3>История ставок (<span><?=$lot[0]['bets_count']?></span>)</h3>
 
                     <table class="history__list">
                         <?php foreach ($bets as $value) : ?>

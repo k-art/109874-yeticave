@@ -27,6 +27,7 @@ function db_select_data($connect, $sql, $data = []) {
 
 //Вставка данных
 function db_insert_data($connect, $table_name, $data = []) {
+
     $field_names = [];
     $values = [];
     $placeholders = [];
@@ -67,6 +68,11 @@ function db_exec_query($connect, $sql, $data = []) {
     return true;
 }
 
+function get_all_categories($connect) {
+    $sql = 'SELECT * FROM categories';
+    return db_select_data($connect, $sql);
+}
+
 //Валидация формы
 function validate_form($rules) {
     $all_errors = [];
@@ -98,6 +104,25 @@ function validate_form($rules) {
                     }
                 }
 
+                if ($current_rule === 'date') {
+                    if (isset($_POST[$key])) {
+                        if (!validate_date($_POST[$key])) {
+                            $all_errors[$key][] = 'Введите корректную дату';
+                        }
+                    }
+                }
+
+                if ($current_rule === 'file') {
+                    if (isset($_FILES[$key])) {
+                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
+                            $all_errors[$key][] = 'Загрузите фото в формате jpg';
+                        }
+                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
+                            $all_errors[$key][] = 'Максимальный размер файла: 200кб';
+                        }
+                    }
+                }
+
                 // функцию можно доработать для проверки других типов.
 
             }
@@ -119,8 +144,9 @@ function validate_date($date) {
     return (preg_match('/^(\\d{2})\\.(\\d{2})\\.(\\d{4})$/', $date, $m) and checkdate($m[2], $m[1], $m[3]));
 };
 
-function searchUserByEmail($email, $users)
-{
+function search_user_by_email($connect, $email) {
+    $users = db_select_data($connect, 'SELECT * FROM users');
+
     $result = null;
     foreach ($users as $user) {
         if ($user['email'] == $email) {

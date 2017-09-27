@@ -1,10 +1,9 @@
 <?php
-require_once ('lots_data.php');
 require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Главная';
-$categories = db_select_data($connect, 'SELECT * FROM categories');
+$categories = get_all_categories($connect);
 $lots = db_select_data($connect, '
 SELECT
   lots.id,

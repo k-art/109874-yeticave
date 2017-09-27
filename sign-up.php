@@ -1,18 +1,44 @@
 <?php
-require_once ('lots_data.php');
 require_once ('functions.php');
 require_once ('init.php');
-
-$title = 'Регистрация';
-$categories = db_select_data($connect, 'SELECT * FROM categories');
 
 if (isset($_SESSION['user'])) {
     header("Location: /index.php");
 }
 
+$title = 'Регистрация';
+$categories = get_all_categories($connect);
+$validationRules = [
+    'user_email' => [
+        'required',
+        'email'
+    ],
+    'user_password' => [
+        'required'
+    ],
+    'user_name' => [
+        'required'
+    ],
+    'user_contacts' => [
+        'required'
+    ],
+    'user_avatar' => [
+        'file'
+    ]
+];
+$validation_errors = validate_form($validationRules);
+
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+}
+
+
 $content = render_template('sign-up',
     [
         'categories' => $categories,
+        'validation_errors' => $validation_errors
     ]
 );
 
