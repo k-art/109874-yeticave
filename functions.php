@@ -49,7 +49,7 @@ function db_insert_data($connect, $table_name, $data = []) {
     if (!$result) {
         return false;
     }
-    return $last_id = mysqli_insert_id($connect);
+    return mysqli_insert_id($connect);
 }
 
 //Произвольный запрос
