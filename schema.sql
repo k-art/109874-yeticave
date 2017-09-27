@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS users (
   user_contacts VARCHAR(255)
 );
 
-CREATE INDEX category on categories(name);
+CREATE INDEX category on categories(id);
 CREATE INDEX lot_id on lots(id);
 CREATE UNIQUE INDEX lot_name on lots(lot_name);
 CREATE UNIQUE INDEX user_email ON users(email);

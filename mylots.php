@@ -4,6 +4,8 @@ require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Мои ставки';
+$categories = db_select_data($connect, 'SELECT * FROM categories');
+
 $user_bets = [];
 
 if (!isset($_SESSION['user'])) {

@@ -5,6 +5,7 @@ require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Вход';
+$categories = db_select_data($connect, 'SELECT * FROM categories');
 $fields_required = ['email', 'password'];
 $errors = [];
 $err_messages = [

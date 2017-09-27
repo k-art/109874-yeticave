@@ -23,6 +23,8 @@ VALUES
   ('2017-09-20 12:00:00', 165000, 2, 2),
   ('2017-09-16 12:00:00', 8100, 2, 3),
   ('2017-09-17 12:00:00', 8200, 3, 3),
+  ('2017-09-19 12:00:00', 12000, 1, 4),
+  ('2017-09-20 12:00:00', 8500, 3, 5),
   ('2017-09-18 12:00:00', 6000, 3, 6);
 
 INSERT INTO lots SET
@@ -103,18 +105,21 @@ SELECT name FROM categories;
 
 # получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, количество ставок, название категории;
 SELECT
-  lot_name,
-  init_price,
-  lot_image,
-  IFNULL(bets.price, init_price),
-  COUNT(bets.lot_id),
-  categories.name
+  lots.id,
+  lots.lot_name,
+  lots.init_price,
+  lots.lot_image,
+  lots.expire_date,
+  IFNULL(MAX(bets.price), lots.init_price) as lot_price,
+  COUNT(bets.lot_id) as bets_count,
+  categories.name as cat_name
 FROM lots
-JOIN bets
-ON bets.lot_id = lots.id
-JOIN categories
-ON categories.id = lots.category_id
+  JOIN bets
+    ON bets.lot_id = lots.id
+  JOIN categories
+    ON categories.id = lots.category_id
 WHERE lots.expire_date > NOW()
+GROUP BY lots.id
 ORDER BY lots.expire_date DESC;
 
 # найти лот по его названию или описанию;

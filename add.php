@@ -4,6 +4,8 @@ require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Добавление лота';
+$categories = db_select_data($connect, 'SELECT * FROM categories');
+
 
 //Проверка формы
 $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
@@ -43,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[] = 'lot_photo';
             $err_messages['lot_photo'] = 'Загрузите фото в формате jpg';
         }
-        elseif ($file_size > 200000) {
+        elseif ($file_size > MAX_FILE_SIZE) {
             $errors[] = 'lot_photo';
             $err_messages['lot_photo'] = 'Максимальный размер файла: 200кб';
         }

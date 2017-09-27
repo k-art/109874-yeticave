@@ -2,7 +2,7 @@
 require_once ('config.php');
 $error = '';
 
-$connect = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
+$connect = mysqli_connect(HOST, USER, PASSWORD, DATABASE, PORT);
 
 if (!$connect) {
     $error = mysqli_connect_error();
