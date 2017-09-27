@@ -1,10 +1,9 @@
 <?php
-require_once ('user_data.php');
-require_once ('lots_data.php');
 require_once ('functions.php');
 require_once ('init.php');
 
 $title = 'Вход';
+$categories = get_all_categories($connect);
 $fields_required = ['email', 'password'];
 $errors = [];
 $err_messages = [
@@ -46,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if (empty($errors)) {
-        if ($user = searchUserByEmail($email_received, $users)) {
+        if ($user = search_user_by_email($connect, $email_received)) {
             $password_hash = $user['password'];
 
             if (password_verify($password_received, $password_hash)) {

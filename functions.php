@@ -4,28 +4,30 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 date_default_timezone_set('Europe/Moscow');
 
+require_once ('config.php');
 require_once ('mysql_helper.php');
 
 //Получение данных
-function select_data($connect, $sql, $data = []) {
-    $selected_data = [];
+function db_select_data($connect, $sql, $data = []) {
 
     $stmt = db_get_prepare_stmt($connect, $sql, $data);
 
-    if ($stmt) {
-        mysqli_stmt_execute($stmt);
-
-        $result = mysqli_stmt_get_result($stmt);
-
-        if ($result) {
-            $selected_data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
+    if (!$stmt) {
+        return [];
     }
-    return $selected_data;
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 //Вставка данных
-function insert_data($connect, $table_name, $data = []) {
+function db_insert_data($connect, $table_name, $data = []) {
+
     $field_names = [];
     $values = [];
     $placeholders = [];
@@ -39,29 +41,36 @@ function insert_data($connect, $table_name, $data = []) {
 
     $stmt = db_get_prepare_stmt($connect, $sql, $values);
 
-    if ($stmt) {
-        $result = mysqli_stmt_execute($stmt);
-
-        if ($result) {
-            return $last_id = mysqli_insert_id($connect);
-        }
+    if (!$stmt) {
+        return false;
     }
-    return false;
+    $result = mysqli_stmt_execute($stmt);
+
+    if (!$result) {
+        return false;
+    }
+    return $last_id = mysqli_insert_id($connect);
 }
 
 //Произвольный запрос
-function exec_query($connect, $sql, $data = []) {
+function db_exec_query($connect, $sql, $data = []) {
 
     $stmt = db_get_prepare_stmt($connect, $sql, $data);
 
-    if ($stmt) {
-        $result = mysqli_stmt_execute($stmt);
-
-        if ($result) {
-            return true;
-        }
+    if (!$stmt) {
+        return false;
     }
-    return false;
+    $result = mysqli_stmt_execute($stmt);
+
+    if (!$result) {
+        return false;
+    }
+    return true;
+}
+
+function get_all_categories($connect) {
+    $sql = 'SELECT * FROM categories';
+    return db_select_data($connect, $sql);
 }
 
 //Валидация формы
@@ -95,6 +104,25 @@ function validate_form($rules) {
                     }
                 }
 
+                if ($current_rule === 'date') {
+                    if (isset($_POST[$key])) {
+                        if (!validate_date($_POST[$key])) {
+                            $all_errors[$key][] = 'Введите корректную дату';
+                        }
+                    }
+                }
+
+                if ($current_rule === 'file') {
+                    if (isset($_FILES[$key])) {
+                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
+                            $all_errors[$key][] = 'Загрузите фото в формате jpg';
+                        }
+                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
+                            $all_errors[$key][] = 'Максимальный размер файла: 200кб';
+                        }
+                    }
+                }
+
                 // функцию можно доработать для проверки других типов.
 
             }
@@ -112,8 +140,13 @@ function filter_text($value) {
 function validate_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL);
 }
-function searchUserByEmail($email, $users)
-{
+function validate_date($date) {
+    return (preg_match('/^(\\d{2})\\.(\\d{2})\\.(\\d{4})$/', $date, $m) and checkdate($m[2], $m[1], $m[3]));
+};
+
+function search_user_by_email($connect, $email) {
+    $users = db_select_data($connect, 'SELECT * FROM users');
+
     $result = null;
     foreach ($users as $user) {
         if ($user['email'] == $email) {
@@ -125,37 +158,38 @@ function searchUserByEmail($email, $users)
 }
 
 //Подсчет оставшегося времени
-function set_lot_time_remaining () {
-    $tomorrow = strtotime('tomorrow midnight');
+function set_lot_time_remaining ($value) {
+    $expire_date = strtotime($value);
     $now = strtotime('now');
+    $time_remaining = $expire_date - $now;
 
-    return gmdate('H:i',$tomorrow - $now);
+    if ($time_remaining <= TIME_24_HOURS) {
+        return gmdate('H:i:s',$time_remaining);
+    }
+    return gmdate('Более j дней',$time_remaining);
 }
 
 //Форматирование времени
 function format_time ($time_stamp) {
+    $time = strtotime($time_stamp);
     $now = strtotime('now');
-    $past_time = $now - $time_stamp ;
-    $time_24h = 86400;
-    $time_1h = 3600;
+    $past_time = $now - $time ;
 
-    if ($past_time > $time_24h) {
-        return gmdate('d.m.y в H:i', $time_stamp);
+    if ($past_time > TIME_24_HOURS) {
+        return gmdate('d.m.y в H:i', $time);
     }
-    elseif ($past_time < $time_1h) {
+    if ($past_time < TIME_1_HOUR) {
         return gmdate('i минут назад', $past_time);
     }
-    else {
-        return gmdate('G часов назад', $past_time);
-    }
+    return gmdate('G часов назад', $past_time);
 }
+
+
 
 //Отрисовка шаблона
 function render_template ($file_name, $data) {
-    $templates_dir = 'templates/';
-    $template_ext = '.php';
 
-    $path_to_template_file = $templates_dir . $file_name . $template_ext;
+    $path_to_template_file = TEMPLATES_DIR . $file_name . TEMPLATE_EXT;
 
     if (file_exists($path_to_template_file)) {
         ob_start('ob_gzhandler');

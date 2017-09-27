@@ -2,36 +2,36 @@
     <nav class="nav">
         <ul class="nav__list container">
             <?php
-            foreach ($categories as $value) : ?>
+            foreach ($categories as $cat) : ?>
                 <li class="nav__item">
-                    <a href="all-lots.html"><?=$value?></a>
+                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=$cat['name']?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </nav>
     <section class="lot-item container">
-        <h2><?=$lots[$id]['name']?></h2>
+        <h2><?=$lot[0]['lot_name']?></h2>
         <div class="lot-item__content">
             <div class="lot-item__left">
                 <div class="lot-item__image">
-                    <img src="<?=$lots[$id]['url']?>" width="730" height="548" alt="<?=$lots[$id]['name']?>">
+                    <img src="<?=$lot[0]['lot_image']?>" width="730" height="548" alt="<?=$lot[0]['lot_name']?>">
                 </div>
-                <p class="lot-item__category">Категория: <span><?=$lots[$id]['category']?></span></p>
-                <p class="lot-item__description"><?=$lots[$id]['description']?></p>
+                <p class="lot-item__category">Категория: <span><?=$lot[0]['cat_name']?></span></p>
+                <p class="lot-item__description"><?=$lot[0]['description']?></p>
             </div>
             <div class="lot-item__right">
                 <?php if (isset($_SESSION['user'])): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
-                        <?=set_lot_time_remaining();?>
+                        <?=set_lot_time_remaining($lot[0]['expire_date']);?>
                     </div>
                     <div class="lot-item__cost-state">
                         <div class="lot-item__rate">
                             <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?=$lots[$id]['price']?></span>
+                            <span class="lot-item__cost"><?=$lot[0]['lot_price']?></span>
                         </div>
                         <div class="lot-item__min-cost">
-                            Мин. ставка <span>12 000 р</span>
+                            Мин. ставка <span><?=$lot[0]['bet_step']?></span>
                         </div>
                     </div>
                     <?php
@@ -54,14 +54,14 @@
                 </div>
                 <?php endif; ?>
                 <div class="history">
-                    <h3>История ставок (<span>4</span>)</h3>
+                    <h3>История ставок (<span><?=$lot[0]['bets_count']?></span>)</h3>
 
                     <table class="history__list">
-                        <?php foreach ($bets as $key => $value) : ?>
+                        <?php foreach ($bets as $value) : ?>
                             <tr class="history__item">
                                 <td class="history__name"><?=$value['name']; ?></td>
                                 <td class="history__price"><?=$value['price']; ?> р</td>
-                                <td class="history__time"><?=format_time($value['ts']); ?></td>
+                                <td class="history__time"><?=format_time($value['date']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
