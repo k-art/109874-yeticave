@@ -29,7 +29,7 @@ $user_bets = db_select_data($connect,"
     JOIN categories ON categories.id = lots.category_id
     WHERE users.id = $user_id
     GROUP BY bets.id
-    ORDER BY bets.date"
+    ORDER BY bets.date DESC"
 );
 
 $content = render_template('mylots', [

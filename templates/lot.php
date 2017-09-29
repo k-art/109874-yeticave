@@ -20,7 +20,7 @@
                 <p class="lot-item__description"><?=$lot[0]['description']?></p>
             </div>
             <div class="lot-item__right">
-                <?php if (isset($_SESSION['user'])): ?>
+                <?php if (isset($_SESSION['user'])) : ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer">
                         <?=set_lot_time_remaining($lot[0]['expire_date']);?>
@@ -34,13 +34,7 @@
                             Мин. ставка <span><?=$lot[0]['bet_step']?></span>
                         </div>
                     </div>
-                    <?php
-                    foreach ($user_bets as $bet) {
-                        if ($bet["id"] === $_GET['id']) {
-                            $is_bet_exist = true;
-                        }
-                    }
-                    if (!$is_bet_exist) : ?>
+                    <?php if (!is_bet_exist($user_bets, $lot_id)) : ?>
                     <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
                             <label for="cost">Ваша ставка</label>

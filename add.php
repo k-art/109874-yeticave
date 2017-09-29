@@ -12,6 +12,21 @@ $text = ['lot-name', 'message'];
 $errors = [];
 $err_messages = [];
 
+if (!isset($_SESSION['user'])) {
+    http_response_code(403);
+
+    $error = 'Залогиньтесь для добавления лота! Ошибка 403';
+    $content = render_template('error', ['categories' => $categories, 'error' => $error]);
+
+    $layout_template = render_template('layout', [
+        'title' => '403',
+        'categories' => $categories,
+        'content' => $content
+    ]);
+
+    print ($layout_template);
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST as $key => $value) {
@@ -116,11 +131,6 @@ if (isset($_SESSION['user'])) {
         'err_messages' => $err_messages
     ];
     $content = render_template('add', $lot_data);
-}
-else {
-
-    $content = render_template('errors', ['categories' => $categories]);
-    http_response_code(403);
 }
 
 $layout_data = [

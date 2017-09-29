@@ -34,7 +34,7 @@ INSERT INTO lots SET
   description = 'Легкий маневренный сноуборд...',
   lot_image = 'img/lot-1.jpg',
   init_price = 10999,
-  expire_date = '2017-09-25 12:00:00',
+  expire_date = '2017-10-05 12:00:00',
   bet_step = 200,
   favorites_count = 0,
   category_id = 1,
@@ -46,7 +46,7 @@ INSERT INTO lots SET
   description = 'Легкий маневренный сноуборд, готовый дать жару в любом парке, растопив снег мощным щелчком и четкими дугами. Стекловолокно Bi-Ax, уложенное в двух направлениях, наделяет этот снаряд отличной гибкостью и отзывчивостью, а симметричная геометрия в сочетании с классическим прогибом кэмбер позволит уверенно держать высокие скорости. А если к концу катального дня сил совсем не останется, просто посмотрите на Вашу доску и улыбнитесь, крутая графика от Шона Кливера еще никого не оставляла равнодушным.',
   lot_image = 'img/lot-2.jpg',
   init_price = 159999,
-  expire_date = '2017-09-30 12:00:00',
+  expire_date = '2017-10-30 12:00:00',
   bet_step = 500,
   favorites_count = 5,
   category_id = 1,
@@ -58,7 +58,7 @@ INSERT INTO lots SET
   description = 'Шикарные крепления...',
   lot_image = 'img/lot-3.jpg',
   init_price = 8000,
-  expire_date = '2017-09-27 12:00:00',
+  expire_date = '2017-10-27 12:00:00',
   bet_step = 100,
   favorites_count = 2,
   category_id = 2,
@@ -70,7 +70,7 @@ INSERT INTO lots SET
   description = 'Удобные ботинки...',
   lot_image = 'img/lot-4.jpg',
   init_price = 10999,
-  expire_date = '2017-09-30 12:00:00',
+  expire_date = '2017-10-10 12:00:00',
   bet_step = 300,
   favorites_count = 2,
   category_id = 3,
@@ -82,7 +82,7 @@ INSERT INTO lots SET
   description = 'Теплая куртка...',
   lot_image = 'img/lot-5.jpg',
   init_price = 7500,
-  expire_date = '2017-09-29 12:00:00',
+  expire_date = '2017-12-29 12:00:00',
   bet_step = 200,
   favorites_count = 4,
   category_id = 4,
@@ -94,7 +94,7 @@ INSERT INTO lots SET
   description = 'Супер маска...',
   lot_image = 'img/lot-6.jpg',
   init_price = 5400,
-  expire_date = '2017-09-30 12:00:00',
+  expire_date = '2017-10-16 12:00:00',
   bet_step = 500,
   favorites_count = 1,
   category_id = 6,
@@ -127,7 +127,7 @@ ORDER BY lots.expire_date DESC;
 SELECT * FROM lots WHERE lot_name = 'Маска Oakley Canopy' OR description LIKE '%маска%';
 
 # обновить название лота по его идентификатору;
-UPDATE lots SET lot_name = 'Новое название' WHERE id = 3;
+UPDATE lots SET lot_name = 'Новое название' WHERE id = ?;
 
 # получить список самых свежих ставок для лота по его идентификатору;
 SELECT * FROM bets

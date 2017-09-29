@@ -1,4 +1,3 @@
 <div class="container">
-    <h2>Ошибка</h2>
-    <p><?=$error;?></p>
+    <h2><?=$error;?></h2>
 </div>
