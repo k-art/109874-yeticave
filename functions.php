@@ -7,7 +7,15 @@ date_default_timezone_set('Europe/Moscow');
 require_once ('config.php');
 require_once ('mysql_helper.php');
 
-//Получение данных
+/**
+ * Читает данные из БД
+ *
+ * @param $connect mysqli Ресурс соединения
+ * @param $sql string SQL запрос
+ * @param array $data Пользовательские данные
+ *
+ * @return array Массив данных
+ */
 function db_select_data($connect, $sql, $data = []) {
 
     $stmt = db_get_prepare_stmt($connect, $sql, $data);
@@ -25,7 +33,15 @@ function db_select_data($connect, $sql, $data = []) {
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-//Вставка данных
+/**
+ * Записывает данные в БД
+ *
+ * @param $connect mysqli Ресурс соединения
+ * @param $table_name string Имя таблицы
+ * @param array $data Данные для записи
+ *
+ * @return mixed
+ */
 function db_insert_data($connect, $table_name, $data = []) {
 
     $field_names = [];
@@ -37,7 +53,8 @@ function db_insert_data($connect, $table_name, $data = []) {
         $values[] = $value;
         $placeholders[] = '?';
     }
-    $sql = 'INSERT INTO ' . $table_name . ' ('. implode(",", $field_names) .')' . ' VALUES (' . implode(",", $placeholders) . ')';
+
+    $sql = 'INSERT INTO ' . $table_name . ' ('. implode(", ", $field_names) .')' . ' VALUES (' . implode(", ", $placeholders) . ')';
 
     $stmt = db_get_prepare_stmt($connect, $sql, $values);
 
@@ -84,14 +101,22 @@ function validate_form($rules) {
             foreach ($rule as $current_rule) {
                 if ($current_rule === 'required') {
                     if (! isset($_POST[$key]) || $_POST[$key] == '') {
-                        $all_errors[$key][] = 'Пожалуйста, заполните это поле';
+                        $all_errors[$key]['message'] = 'Пожалуйста, заполните это поле';
                     }
                 }
 
                 if ($current_rule === 'email') {
                     if (isset($_POST[$key]) && !empty($_POST[$key])) {
                         if (! filter_var($_POST[$key], FILTER_VALIDATE_EMAIL)) {
-                            $all_errors[$key][] = 'Введите корректный email';
+                            $all_errors[$key]['message'] = 'Введите корректный email';
+                        }
+                    }
+                }
+
+                if ($current_rule === 'text') {
+                    if (isset($_POST[$key]) && !empty($_POST[$key])) {
+                        if (! filter_var($_POST[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            $all_errors[$key]['message'] = 'Введите корректные данные';
                         }
                     }
                 }
@@ -99,7 +124,7 @@ function validate_form($rules) {
                 if ($current_rule === 'numeric') {
                     if (isset($_POST[$key])) {
                         if (! filter_var($_POST[$key], FILTER_VALIDATE_FLOAT)) {
-                            $all_errors[$key][] = 'Для данного поля предсмотрен ввод только чисел';
+                            $all_errors[$key]['message'] = 'Для данного поля предсмотрен ввод только чисел';
                         }
                     }
                 }
@@ -107,21 +132,21 @@ function validate_form($rules) {
                 if ($current_rule === 'date') {
                     if (isset($_POST[$key])) {
                         if (!validate_date($_POST[$key])) {
-                            $all_errors[$key][] = 'Введите корректную дату';
+                            $all_errors[$key]['message'] = 'Введите корректную дату';
                         }
                     }
                 }
 
-                if ($current_rule === 'file') {
-                    if (isset($_FILES[$key])) {
-                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
-                            $all_errors[$key][] = 'Загрузите фото в формате jpg';
-                        }
-                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
-                            $all_errors[$key][] = 'Максимальный размер файла: 200кб';
-                        }
-                    }
-                }
+//                if ($current_rule === 'file') {
+//                    if (isset($_FILES[$key])) {
+//                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
+//                            $all_errors[$key]['message'] = 'Загрузите фото в формате jpg';
+//                        }
+//                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
+//                            $all_errors[$key]['message'] = 'Максимальный размер файла: 200кб';
+//                        }
+//                    }
+//                }
 
                 // функцию можно доработать для проверки других типов.
 
@@ -157,6 +182,20 @@ function search_user_by_email($connect, $email) {
     return $result;
 }
 
+function days($value) {
+    $res_1 = $value % 10;
+    $res_2 = $value / 10 % 10;
+    if ($res_1 == 1) {
+        return "день";
+    }
+    if ($res_2 && $res_2 == 1) {
+        return "дней";
+    }
+    if (in_array($res_1,["2,3,4"])) {
+        return "дня";
+    }
+    return "дней";
+}
 //Подсчет оставшегося времени
 function set_lot_time_remaining ($value) {
     $expire_date = strtotime($value);
@@ -166,7 +205,13 @@ function set_lot_time_remaining ($value) {
     if ($time_remaining <= TIME_24_HOURS) {
         return gmdate('H:i:s',$time_remaining);
     }
-    return gmdate('Более j дней',$time_remaining);
+    if ($time_remaining > TIME_24_HOURS * 30) {
+        return gmdate('Больше месяца',$time_remaining);
+    }
+    $result = gmdate('j',$time_remaining);
+    $day_name = days($result);
+
+    return "$result $day_name";
 }
 
 //Форматирование времени
@@ -184,6 +229,14 @@ function format_time ($time_stamp) {
     return gmdate('G часов назад', $past_time);
 }
 
+function is_bet_exist ($user_bets, $lot_id) {
+    foreach ($user_bets as $bet) {
+        if (intval($bet['lot_id']) === intval($lot_id)) {
+            return true;
+        }
+    }
+    return false;
+};
 
 
 //Отрисовка шаблона
