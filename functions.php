@@ -101,14 +101,22 @@ function validate_form($rules) {
             foreach ($rule as $current_rule) {
                 if ($current_rule === 'required') {
                     if (! isset($_POST[$key]) || $_POST[$key] == '') {
-                        $all_errors[$key][] = 'Пожалуйста, заполните это поле';
+                        $all_errors[$key]['message'] = 'Пожалуйста, заполните это поле';
                     }
                 }
 
                 if ($current_rule === 'email') {
                     if (isset($_POST[$key]) && !empty($_POST[$key])) {
                         if (! filter_var($_POST[$key], FILTER_VALIDATE_EMAIL)) {
-                            $all_errors[$key][] = 'Введите корректный email';
+                            $all_errors[$key]['message'] = 'Введите корректный email';
+                        }
+                    }
+                }
+
+                if ($current_rule === 'text') {
+                    if (isset($_POST[$key]) && !empty($_POST[$key])) {
+                        if (! filter_var($_POST[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                            $all_errors[$key]['message'] = 'Введите корректные данные';
                         }
                     }
                 }
@@ -116,7 +124,7 @@ function validate_form($rules) {
                 if ($current_rule === 'numeric') {
                     if (isset($_POST[$key])) {
                         if (! filter_var($_POST[$key], FILTER_VALIDATE_FLOAT)) {
-                            $all_errors[$key][] = 'Для данного поля предсмотрен ввод только чисел';
+                            $all_errors[$key]['message'] = 'Для данного поля предсмотрен ввод только чисел';
                         }
                     }
                 }
@@ -124,21 +132,21 @@ function validate_form($rules) {
                 if ($current_rule === 'date') {
                     if (isset($_POST[$key])) {
                         if (!validate_date($_POST[$key])) {
-                            $all_errors[$key][] = 'Введите корректную дату';
+                            $all_errors[$key]['message'] = 'Введите корректную дату';
                         }
                     }
                 }
 
-                if ($current_rule === 'file') {
-                    if (isset($_FILES[$key])) {
-                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
-                            $all_errors[$key][] = 'Загрузите фото в формате jpg';
-                        }
-                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
-                            $all_errors[$key][] = 'Максимальный размер файла: 200кб';
-                        }
-                    }
-                }
+//                if ($current_rule === 'file') {
+//                    if (isset($_FILES[$key])) {
+//                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
+//                            $all_errors[$key]['message'] = 'Загрузите фото в формате jpg';
+//                        }
+//                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
+//                            $all_errors[$key]['message'] = 'Максимальный размер файла: 200кб';
+//                        }
+//                    }
+//                }
 
                 // функцию можно доработать для проверки других типов.
 
