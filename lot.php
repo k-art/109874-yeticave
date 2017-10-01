@@ -12,20 +12,6 @@ $lots = db_select_data($connect, "
     SELECT 
       COUNT(lots.id) as lots_count 
     FROM lots ");
-//$lots_count = array_pop($lots_data);
-//print_r(array_pop($lots)['lots_count']);
-//print_r('<br>');
-////print_r($lots[0]);
-//print_r('<br>');
-//
-////print_r($lots[0]['lots_count']);
-//print_r('<br>');
-//
-////print_r(array_pop($lots));
-//print_r('<br>');
-
-
-//print_r(in_array('lots_count', $lots));
 
 $price = null;
 $user_bets = [];
@@ -35,7 +21,7 @@ $validationRules = [
         'numeric'
     ]
 ];
-$validation_errors = validate_form($validationRules);
+$errors = validate_form($validationRules);
 
 if (isset($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
@@ -47,13 +33,24 @@ $user_bets = db_select_data($connect, "
     WHERE bets.user_id = ?", [$user_id]);
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
     $lot_id = $_POST['lot-id'];
+    $lot_price = $_POST['lot_price'];
+    $bet_step = $_POST['bet_step'];
     $date = date('Y-m-d H:i:s',$_POST['date']);
-
     $price = $_POST['cost'];
 
-    $lot_id = db_insert_data($connect, 'bets', ['user_id' => $user_id, 'lot_id' => $lot_id, 'date' => $date, 'price' => $price]);
+    if ($price < $lot_price + $bet_step) {
+        $errors['cost']['message'] = 'Ваша ставка слишком мала';
+        $_GET['errors']['cost'] = $errors['cost']['message'];
+        header("Location: /lot.php?id=$lot_id");
+//        $content = render_template('lot', ['categories' => $categories, 'errors' => $errors, 'bets' => $bets, 'user_bets' => $user_bets, 'lot_id' => $lot_id]);
+//        $layout_template = render_template('layout', ['title' => $title, 'categories' => $categories, 'content' => $content]);
+//        print ($layout_template . '?id=$lot_id');
+        exit();
+    }
+
+    db_insert_data($connect, 'bets', ['user_id' => $user_id, 'lot_id' => $lot_id, 'date' => $date, 'price' => $price]);
     header("Location: /mylots.php");
     exit();
 }
@@ -110,7 +107,6 @@ $content = render_template('lot',
         'categories' => $categories,
         'lot' => $lot,
         'bets' => $bets,
-        'validation_errors' => $validation_errors,
         'user_bets' => $user_bets,
         'lot_id' => $lot_id
     ]

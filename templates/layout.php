@@ -27,9 +27,11 @@
         <nav class="user-menu">
 
             <?php if (isset($_SESSION['user'])): ?>
+                <?php if (!empty($_SESSION['user']['avatar'])) : ?>
                 <div class="user-menu__image">
-                    <img src="img/user.jpg" width="40" height="40" alt="Пользователь">
+                    <img src="<?=$_SESSION['user']['avatar']; ?>" width="40" height="40" alt="Пользователь">
                 </div>
+                <?php endif; ?>
                 <div class="user-menu__logged">
                     <p><?=$_SESSION['user']['name']; ?></p>
                     <a href="logout.php">Выход</a>

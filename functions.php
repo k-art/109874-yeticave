@@ -90,6 +90,21 @@ function get_all_categories($connect) {
     return db_select_data($connect, $sql);
 }
 
+function set_category($id, $categories) {
+    $cat = '';
+
+    foreach ($categories as $key => $value) {
+
+        if ($value['id'] == $id) {
+            $cat = $value['name'];
+        }
+    }
+    if (!empty($cat)) {
+        return $cat;
+    }
+    return false;
+};
+
 //Валидация формы
 function validate_form($rules) {
     $all_errors = [];
@@ -124,7 +139,7 @@ function validate_form($rules) {
                 if ($current_rule === 'numeric') {
                     if (isset($_POST[$key])) {
                         if (! filter_var($_POST[$key], FILTER_VALIDATE_FLOAT)) {
-                            $all_errors[$key]['message'] = 'Для данного поля предсмотрен ввод только чисел';
+                            $all_errors[$key]['message'] = 'Введите число';
                         }
                     }
                 }
@@ -137,10 +152,16 @@ function validate_form($rules) {
                     }
                 }
 
+                if ($current_rule === 'category') {
+                    if (isset($_POST[$key]) && $_POST[$key] === 'Выберите категорию') {
+                        $all_errors[$key]['message'] = 'Выберите категорию';
+                    }
+                }
+
 //                if ($current_rule === 'file') {
 //                    if (isset($_FILES[$key])) {
-//                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
-//                            $all_errors[$key]['message'] = 'Загрузите фото в формате jpg';
+//                        if ($_FILES[$key]['type'] !== 'image/jpeg' || $_FILES[$key]['type'] !== 'image/png') {
+//                            $all_errors[$key]['message'] = 'Загрузите фото в формате jpg или png';
 //                        }
 //                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
 //                            $all_errors[$key]['message'] = 'Максимальный размер файла: 200кб';
@@ -148,14 +169,11 @@ function validate_form($rules) {
 //                    }
 //                }
 
-                // функцию можно доработать для проверки других типов.
-
             }
         }
     }
     return $all_errors;
 }
-//Проверка отдельных полей, необходимо интегрировать в основную функцию валидации...
 function validate_number($value) {
     return filter_var($value, FILTER_VALIDATE_INT);
 }
@@ -168,6 +186,17 @@ function validate_email($value) {
 function validate_date($date) {
     return (preg_match('/^(\\d{2})\\.(\\d{2})\\.(\\d{4})$/', $date, $m) and checkdate($m[2], $m[1], $m[3]));
 };
+
+function validate_file ($type, $size, $file_name) {
+    $file_error = [];
+    if ($type !== 'image/jpeg' || $type !== 'image/png') {
+        $file_error[$file_name]['message'] = 'Загрузите фото в формате jpg или png';
+    }
+    if ($size > MAX_FILE_SIZE) {
+        $file_error[$file_name]['message'] = 'Максимальный размер файла: 200кб';
+    }
+    return $file_error;
+}
 
 function search_user_by_email($connect, $email) {
     $users = db_select_data($connect, 'SELECT * FROM users');

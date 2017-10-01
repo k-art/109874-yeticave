@@ -37,10 +37,15 @@
                     <?php if (!is_bet_exist($user_bets, $lot_id)) : ?>
                     <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
+                            <?php if (!empty($errors['cost']['message'])) : ?>
+                            <label for="cost" style="color: #f84646;"><?=$errors['cost']['message']?></label>
+                            <? endif; ?>
                             <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="number" name="cost" placeholder="12 000" value="">
+                            <input id="cost" type="number" name="cost" placeholder="12 000" value="<?=$lot[0]['lot_price'] + $lot[0]['bet_step']?>">
                             <input type="hidden" name="lot-id" value="<?=$_GET['id']?>">
                             <input type="hidden" name="date" value="<?=strtotime('now');?>">
+                            <input type="hidden" name="lot_price" value="<?=$lot[0]['lot_price']?>">
+                            <input type="hidden" name="bet_step" value="<?=$lot[0]['bet_step']?>">
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>

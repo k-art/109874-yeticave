@@ -10,7 +10,7 @@
         </ul>
     </nav>
     <?php if (!empty($errors)) : ?>
-    <form class="form container form--invalid" action="sign-up.php" method="post"> <!-- form--invalid -->
+    <form class="form container form--invalid" action="sign-up.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
     <?php else : ?>
     <form class="form container" action="sign-up.php" method="post">
     <?php endif; ?>

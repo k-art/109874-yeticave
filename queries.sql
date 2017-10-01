@@ -12,7 +12,7 @@ INSERT INTO
   users(creation_date, name, email, password, avatar)
 VALUES
   ('2017-09-01 10:00:00', 'Игнат', 'ignat.v@gmail.com', '$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka', 'img/user.jpg'),
-  ('2017-09-09 10:00:00', 'Леночка', 'kitty_93@li.ru', '$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa', 'img/user.jpg'),
+  ('2017-09-09 10:00:00', 'Леночка', 'kitty_93@li.ru', '$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa', null),
   ('2017-09-02 10:00:00', 'Руслан', 'warrior07@mail.ru', '$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW', 'img/user.jpg');
 
 INSERT INTO
@@ -99,38 +99,3 @@ INSERT INTO lots SET
   favorites_count = 1,
   category_id = 6,
   author_id = 2;
-
-
-# получить список из всех категорий;
-SELECT name FROM categories;
-
-# получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, количество ставок, название категории;
-SELECT
-  lots.id,
-  lots.lot_name,
-  lots.init_price,
-  lots.lot_image,
-  lots.expire_date,
-  IFNULL(MAX(bets.price), lots.init_price) as lot_price,
-  COUNT(bets.lot_id) as bets_count,
-  categories.name as cat_name
-FROM lots
-  JOIN bets
-    ON bets.lot_id = lots.id
-  JOIN categories
-    ON categories.id = lots.category_id
-WHERE lots.expire_date > NOW()
-GROUP BY lots.id
-ORDER BY lots.expire_date DESC;
-
-# найти лот по его названию или описанию;
-SELECT * FROM lots WHERE lot_name = 'Маска Oakley Canopy' OR description LIKE '%маска%';
-
-# обновить название лота по его идентификатору;
-UPDATE lots SET lot_name = 'Новое название' WHERE id = ?;
-
-# получить список самых свежих ставок для лота по его идентификатору;
-SELECT * FROM bets
-JOIN lots
-ON bets.lot_id = lots.id
-ORDER BY bets.date;
