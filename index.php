@@ -13,11 +13,12 @@ SELECT
   lots.expire_date,
   IFNULL(MAX(bets.price), lots.init_price) as lot_price,
   COUNT(bets.lot_id) as bets_count,
+  categories.id as cat_id,
   categories.name as cat_name
 FROM lots
-JOIN bets
+LEFT JOIN bets
 ON bets.lot_id = lots.id
-JOIN categories
+LEFT JOIN categories
 ON categories.id = lots.category_id
 WHERE lots.expire_date > NOW()
 GROUP BY lots.id

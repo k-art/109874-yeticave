@@ -39,7 +39,7 @@
                         <p class="lot-item__form-item">
                             <?php if (!empty($errors['cost']['message'])) : ?>
                             <label for="cost" style="color: #f84646;"><?=$errors['cost']['message']?></label>
-                            <? endif; ?>
+                            <?php endif; ?>
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="number" name="cost" placeholder="12 000" value="<?=$lot[0]['lot_price'] + $lot[0]['bet_step']?>">
                             <input type="hidden" name="lot-id" value="<?=$_GET['id']?>">

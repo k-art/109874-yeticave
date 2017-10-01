@@ -4,6 +4,14 @@ require_once ('init.php');
 
 $title = 'Добавление лота';
 $categories = get_all_categories($connect);
+$input_values = [
+    'lot-name' => '',
+    'description' => '',
+    'category' => '',
+    'lot-rate' => '',
+    'lot-step' => '',
+    'lot-expire' => ''
+];
 $errors = [];
 $validationRules = [
     'lot-name' => [
@@ -15,7 +23,7 @@ $validationRules = [
         'text',
         'category'
     ],
-    'message' => [
+    'description' => [
         'required',
         'text'
     ],
@@ -27,7 +35,7 @@ $validationRules = [
         'required',
         'numeric'
     ],
-    'lot-date' => [
+    'lot-expire' => [
         'required',
         'date'
     ]
@@ -49,26 +57,38 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+if (($_SERVER['REQUEST_METHOD'] == 'POST')) {
+    $input_values = [
+        'lot-name' => $_POST['lot-name'],
+        'description' => $_POST['description'],
+        'category' => $_POST['category'],
+        'lot-rate' => $_POST['lot-rate'],
+        'lot-step' => $_POST['lot-step'],
+        'lot-expire' => $_POST['lot-expire']
+    ];
+}
+
+
 if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
-    $creation_date = $_POST['date'];
+    $creation_date = date('Y-m-d H:i:s',$_POST['lot-date']);
     $lot_name = $_POST['lot-name'];
-    $description = $_POST['message'];
+    $description = $_POST['description'];
     $category_id = $_POST['category'];
     $init_price = $_POST['lot-rate'];
     $bet_step = $_POST['lot-step'];
-    $expire_date = $_POST['lot-date'];
+    $expire_date = $_POST['lot-expire'];
 
     if (isset($_FILES['lot-image'])) {
         $file_name = $_FILES['lot-image']['name'];
-        $file_path = __DIR__ . '/img/';
+        $file_path = __DIR__ . IMG_DIR;
         $file_type = $_FILES['lot-image']['type'];
         $file_size = $_FILES['lot-image']['size'];
 
-        $errors = validate_file($file_type, $file_size, $file_name);
+        $errors = validate_file($file_type, $file_size, 'lot-image');
 
         if (empty($errors['lot-image'])) {
             move_uploaded_file($_FILES['lot-image']['tmp_name'], $file_path . $file_name);
-            $url_file = '/img/' . $file_name;
+            $url_file = IMG_DIR . $file_name;
         }
     }
 
@@ -92,7 +112,8 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
 $content = render_template('add',
     [
         'categories' => $categories,
-        'errors' => $errors
+        'errors' => $errors,
+        'input_values' => $input_values
     ]
 );
 $layout_template = render_template('layout',

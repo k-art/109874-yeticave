@@ -18,18 +18,19 @@ SELECT
   lots.init_price,
   lots.lot_image,
   lots.expire_date,
+  lots.creation_date,
   IFNULL(MAX(bets.price), lots.init_price) as lot_price,
   COUNT(bets.lot_id) as bets_count,
   categories.name as cat_name,
   categories.id as cat_id
 FROM lots
-JOIN bets
+LEFT JOIN bets
 ON bets.lot_id = lots.id
-JOIN categories
+LEFT JOIN categories
 ON categories.id = lots.category_id
 WHERE categories.id = ?
 GROUP BY lots.id
-ORDER BY lots.expire_date;', [$current_cat]
+ORDER BY lots.creation_date DESC;', [$current_cat]
 );
 
 $content = render_template('all-lots',

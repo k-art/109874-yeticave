@@ -10,7 +10,7 @@ $user_id = null;
 $bets = [];
 $lots = db_select_data($connect, "
     SELECT 
-      COUNT(lots.id) as lots_count 
+      lots.id
     FROM lots ");
 
 $price = null;
@@ -29,8 +29,7 @@ if (isset($_SESSION['user'])) {
 $user_bets = db_select_data($connect, "
     SELECT  
       bets.lot_id
-    FROM bets 
-    WHERE bets.user_id = ?", [$user_id]);
+    FROM bets");
 
 
 if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
@@ -55,7 +54,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
     exit();
 }
 
-if (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] > array_pop($lots)['lots_count']) {
+if (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] > array_pop($lots)['id']) {
     http_response_code(404);
     $error = 'Такой страницы не существует! Ошибка 404';
     $content = render_template('error', ['categories' => $categories, 'error' => $error]);
@@ -84,8 +83,8 @@ $lot = db_select_data($connect, "
       categories.name as cat_name, 
       COUNT(bets.lot_id) as bets_count
     FROM lots
-    JOIN bets ON bets.lot_id = lots.id
-    JOIN categories ON categories.id = lots.category_id
+    LEFT JOIN bets ON bets.lot_id = lots.id
+    LEFT JOIN categories ON categories.id = lots.category_id
     WHERE lots.id = ?
     GROUP BY lots.id", [$lot_id]);
 
