@@ -22,24 +22,23 @@ LEFT JOIN categories
 ON categories.id = lots.category_id
 WHERE lots.expire_date > NOW()
 GROUP BY lots.id
-ORDER BY lots.expire_date DESC;'
+ORDER BY lots.expire_date;'
 );
 
 $cat_class_to_add = ['boards', 'attachment', 'boots', 'clothing', 'tools', 'other'];
-$index_data = [
-    'categories' => $categories,
-    'cat_class_to_add' => $cat_class_to_add,
-    'lots' => $lots
-];
 
-$content = render_template('index', $index_data);
-
-$layout_data = [
-    'title' => $title,
-    'categories' => $categories,
-    'content' => $content
-];
-
-$layout_template = render_template('layout', $layout_data);
-
+$content = render_template('index',
+    [
+        'categories' => $categories,
+        'cat_class_to_add' => $cat_class_to_add,
+        'lots' => $lots
+    ]
+);
+$layout_template = render_template('layout',
+    [
+        'title' => $title,
+        'categories' => $categories,
+        'content' => $content
+    ]
+);
 print ($layout_template);
