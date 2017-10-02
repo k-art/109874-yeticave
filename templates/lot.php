@@ -34,7 +34,7 @@
                             Мин. ставка <span><?=$lot[0]['bet_step']?></span>
                         </div>
                     </div>
-                    <?php if (!is_bet_exist($user_bets, $lot_id)) : ?>
+                    <?php if ($is_auth && !$is_bet_made) : ?>
                     <form class="lot-item__form" action="lot.php" method="post">
                         <p class="lot-item__form-item">
                             <?php if (!empty($errors['cost']['message'])) : ?>

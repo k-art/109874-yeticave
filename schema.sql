@@ -1,11 +1,11 @@
-CREATE DATABASE yeticave;
+CREATE DATABASE yeticave COLLATE utf8_general_ci;
 
 USE yeticave;
 
 CREATE TABLE IF NOT EXISTS categories (
   id  INT AUTO_INCREMENT PRIMARY KEY,
   name  VARCHAR(128)
-);
+) ENGINE=INNODB CHARACTER SET=utf8;
 
 CREATE TABLE IF NOT EXISTS lots (
   id  INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS lots (
   author_id INT,
   winner_id INT,
   category_id INT
-);
+) ENGINE=INNODB CHARACTER SET=utf8;
 
 CREATE TABLE IF NOT EXISTS bets (
   id  INT AUTO_INCREMENT PRIMARY KEY,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS bets (
 
   user_id INT,
   lot_id INT
-);
+) ENGINE=INNODB CHARACTER SET=utf8;
 
 CREATE TABLE IF NOT EXISTS users (
   id  INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS users (
   password CHAR(60),
   avatar VARCHAR(255),
   user_contacts VARCHAR(255)
-);
+) ENGINE=INNODB CHARACTER SET=utf8;
 
 CREATE INDEX category on categories(id);
 CREATE INDEX lot_id on lots(id);

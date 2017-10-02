@@ -32,16 +32,17 @@ $user_bets = db_select_data($connect,"
     ORDER BY bets.date DESC"
 );
 
-$content = render_template('mylots', [
-    'categories' => $categories,
-    'user_bets' => $user_bets
-]);
-
-$layout_data = [
-    'title' => $title,
-    'categories' => $categories,
-    'content' => $content
-];
-
-$layout_template = render_template('layout', $layout_data);
+$content = render_template('mylots',
+    [
+        'categories' => $categories,
+        'user_bets' => $user_bets
+    ]
+);
+$layout_template = render_template('layout',
+    [
+        'title' => $title,
+        'categories' => $categories,
+        'content' => $content
+    ]
+);
 print ($layout_template);
