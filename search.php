@@ -6,10 +6,10 @@ $title = ' Поиск';
 $categories = get_all_categories($connect);
 $search = '';
 
-if (isset($_GET['search'])) {
-    $search = $_GET['search'];
-    $search = mysqli_real_escape_string($connect, $search );
-//    $lot_count = count($search_lot);
+if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $search_value = '%'. $_GET['search'] .'%';
+    $search = mysqli_real_escape_string($connect, $search_value);
+    print_r($search);
 };
 $search_lots = db_select_data($connect, '
         SELECT 
@@ -22,7 +22,7 @@ $search_lots = db_select_data($connect, '
           categories.name as cat_name
 		FROM lots 
 		JOIN categories ON categories.id = lots.category_id
-        WHERE lots.lot_name LIKE ? OR lots.description LIKE ?', ['%'. $search .'%', '%'. $search .'%']);
+        WHERE lots.lot_name LIKE ? OR lots.description LIKE ?', [$search, $search]);
 
 $content = render_template('search',
     [
