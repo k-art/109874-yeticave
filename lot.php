@@ -43,9 +43,6 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') && empty($errors)) {
         $errors['cost']['message'] = 'Ваша ставка слишком мала';
         $_GET['errors']['cost'] = $errors['cost']['message'];
         header("Location: /lot.php?id=$lot_id");
-//        $content = render_template('lot', ['categories' => $categories, 'errors' => $errors, 'bets' => $bets, 'user_bets' => $user_bets, 'lot_id' => $lot_id]);
-//        $layout_template = render_template('layout', ['title' => $title, 'categories' => $categories, 'content' => $content]);
-//        print ($layout_template . '?id=$lot_id');
         exit();
     }
 
@@ -90,7 +87,7 @@ $lot = db_select_data($connect, "
 
 $bets = db_select_data($connect,"
     SELECT 
-      users.id, 
+      users.id as user_id, 
       users.name, 
       bets.price, 
       bets.date 
@@ -101,22 +98,31 @@ $bets = db_select_data($connect,"
     GROUP BY bets.id
     ORDER BY bets.date DESC", [$lot_id]);
 
+$is_bet_made = false;
+
+foreach($bets as $key => $bet) {
+    if (intval($bet['user_id']) === $user_id) {
+        $is_bet_made = true;
+        break;
+    }
+}
+
 $content = render_template('lot',
     [
         'categories' => $categories,
         'lot' => $lot,
         'bets' => $bets,
         'user_bets' => $user_bets,
-        'lot_id' => $lot_id
+        'lot_id' => $lot_id,
+        'is_auth' => !empty($user_id),
+        'is_bet_made' => $is_bet_made
     ]
 );
-
-$layout_data = [
-    'title' => $title,
-    'categories' => $categories,
-    'content' => $content
-];
-
-$layout_template = render_template('layout', $layout_data);
-
+$layout_template = render_template('layout',
+    [
+        'title' => $title,
+        'categories' => $categories,
+        'content' => $content
+    ]
+);
 print ($layout_template);

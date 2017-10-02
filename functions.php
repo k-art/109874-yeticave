@@ -43,10 +43,6 @@ function db_select_data($connect, $sql, $data = []) {
  * @return mixed
  */
 function db_insert_data($connect, $table_name, $data = []) {
-//    print_r($table_name);
-//    print_r('<br>');
-//    print_r($data);
-//    print_r('<br>');
 
     $field_names = [];
     $values = [];
@@ -61,21 +57,11 @@ function db_insert_data($connect, $table_name, $data = []) {
     $sql = 'INSERT INTO ' . $table_name . ' ('. implode(", ", $field_names) .')' . ' VALUES (' . implode(", ", $placeholders) . ')';
 
     $stmt = db_get_prepare_stmt($connect, $sql, $values);
-//    print_r($sql);
-//    print_r('<br>');
-//    print_r($values);
-//    print_r('<br>');
-//    print_r($stmt);
-//    print_r('<br>');
 
     if (!$stmt) {
         return false;
     }
     $result = mysqli_stmt_execute($stmt);
-//    print_r($result);
-//    print_r('<br>');
-//    print_r(mysqli_insert_id($connect));
-//    print_r('<br>');
 
     if (!$result) {
         return false;
@@ -261,16 +247,6 @@ function format_time ($time_stamp) {
     }
     return gmdate('G часов назад', $past_time);
 }
-
-function is_bet_exist ($user_bets, $lot_id) {
-    foreach ($user_bets as $bet) {
-        if (intval($bet['lot_id']) === intval($lot_id)) {
-            return true;
-        }
-    }
-    return false;
-};
-
 
 //Отрисовка шаблона
 function render_template ($file_name, $data) {
