@@ -43,6 +43,10 @@ function db_select_data($connect, $sql, $data = []) {
  * @return mixed
  */
 function db_insert_data($connect, $table_name, $data = []) {
+//    print_r($table_name);
+//    print_r('<br>');
+//    print_r($data);
+//    print_r('<br>');
 
     $field_names = [];
     $values = [];
@@ -57,11 +61,21 @@ function db_insert_data($connect, $table_name, $data = []) {
     $sql = 'INSERT INTO ' . $table_name . ' ('. implode(", ", $field_names) .')' . ' VALUES (' . implode(", ", $placeholders) . ')';
 
     $stmt = db_get_prepare_stmt($connect, $sql, $values);
+//    print_r($sql);
+//    print_r('<br>');
+//    print_r($values);
+//    print_r('<br>');
+//    print_r($stmt);
+//    print_r('<br>');
 
     if (!$stmt) {
         return false;
     }
     $result = mysqli_stmt_execute($stmt);
+//    print_r($result);
+//    print_r('<br>');
+//    print_r(mysqli_insert_id($connect));
+//    print_r('<br>');
 
     if (!$result) {
         return false;
@@ -90,6 +104,21 @@ function get_all_categories($connect) {
     return db_select_data($connect, $sql);
 }
 
+function set_category($id, $categories) {
+    $cat = '';
+
+    foreach ($categories as $key => $value) {
+
+        if ($value['id'] == $id) {
+            $cat = $value['name'];
+        }
+    }
+    if (!empty($cat)) {
+        return $cat;
+    }
+    return false;
+};
+
 //Валидация формы
 function validate_form($rules) {
     $all_errors = [];
@@ -107,7 +136,7 @@ function validate_form($rules) {
 
                 if ($current_rule === 'email') {
                     if (isset($_POST[$key]) && !empty($_POST[$key])) {
-                        if (! filter_var($_POST[$key], FILTER_VALIDATE_EMAIL)) {
+                        if (! validate_email($_POST[$key])) {
                             $all_errors[$key]['message'] = 'Введите корректный email';
                         }
                     }
@@ -115,7 +144,7 @@ function validate_form($rules) {
 
                 if ($current_rule === 'text') {
                     if (isset($_POST[$key]) && !empty($_POST[$key])) {
-                        if (! filter_var($_POST[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                        if (! filter_text($_POST[$key])) {
                             $all_errors[$key]['message'] = 'Введите корректные данные';
                         }
                     }
@@ -123,44 +152,35 @@ function validate_form($rules) {
 
                 if ($current_rule === 'numeric') {
                     if (isset($_POST[$key])) {
-                        if (! filter_var($_POST[$key], FILTER_VALIDATE_FLOAT)) {
-                            $all_errors[$key]['message'] = 'Для данного поля предсмотрен ввод только чисел';
+                        if (! validate_number($_POST[$key])) {
+                            $all_errors[$key]['message'] = 'Введите число';
                         }
                     }
                 }
 
                 if ($current_rule === 'date') {
                     if (isset($_POST[$key])) {
-                        if (!validate_date($_POST[$key])) {
+                        if (! validate_date($_POST[$key])) {
                             $all_errors[$key]['message'] = 'Введите корректную дату';
                         }
                     }
                 }
 
-//                if ($current_rule === 'file') {
-//                    if (isset($_FILES[$key])) {
-//                        if ($_FILES[$key]['type'] !== 'image/jpeg') {
-//                            $all_errors[$key]['message'] = 'Загрузите фото в формате jpg';
-//                        }
-//                        elseif ($_FILES[$key]['size'] > MAX_FILE_SIZE) {
-//                            $all_errors[$key]['message'] = 'Максимальный размер файла: 200кб';
-//                        }
-//                    }
-//                }
-
-                // функцию можно доработать для проверки других типов.
-
+                if ($current_rule === 'category') {
+                    if (isset($_POST[$key]) && $_POST[$key] === 'Выберите категорию') {
+                        $all_errors[$key]['message'] = 'Выберите категорию';
+                    }
+                }
             }
         }
     }
     return $all_errors;
 }
-//Проверка отдельных полей, необходимо интегрировать в основную функцию валидации...
 function validate_number($value) {
-    return filter_var($value, FILTER_VALIDATE_INT);
+    return filter_var($value, FILTER_VALIDATE_FLOAT);
 }
 function filter_text($value) {
-    return trim(htmlspecialchars($value));
+    return filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
 function validate_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL);
@@ -168,6 +188,19 @@ function validate_email($value) {
 function validate_date($date) {
     return (preg_match('/^(\\d{2})\\.(\\d{2})\\.(\\d{4})$/', $date, $m) and checkdate($m[2], $m[1], $m[3]));
 };
+
+function validate_file ($type, $size, $file) {
+    $valid_file_types = ['image/jpeg', 'image/png'];
+    $file_error = [];
+
+    if (!in_array($type, $valid_file_types)) {
+        $file_error[$file]['message'] = 'Загрузите фото в формате jpg или png';
+    }
+    if ($size > MAX_FILE_SIZE) {
+        $file_error[$file]['message'] = 'Максимальный размер файла: 200кб';
+    }
+    return $file_error;
+}
 
 function search_user_by_email($connect, $email) {
     $users = db_select_data($connect, 'SELECT * FROM users');

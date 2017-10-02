@@ -10,9 +10,9 @@
         </ul>
     </nav>
     <?php if (!empty($errors)) : ?>
-    <form class="form container form--invalid" action="sign-up.php" method="post"> <!-- form--invalid -->
+    <form class="form container form--invalid" action="sign-up.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
     <?php else : ?>
-    <form class="form container" action="sign-up.php" method="post">
+    <form class="form container" action="sign-up.php" method="post" enctype="multipart/form-data">
     <?php endif; ?>
         <h2>Регистрация нового аккаунта</h2>
         <input type="hidden" name="date" value="<?=strtotime('now');?>">
@@ -22,7 +22,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="email">E-mail*</label>
-            <input id="email" type="text" name="email" placeholder="Введите e-mail"> <!-- required -->
+            <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=$input_values['email']?>"> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['email'])) {
                     print $errors['email']['message'];
@@ -48,7 +48,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="name">Имя*</label>
-            <input id="name" type="text" name="name" placeholder="Введите имя"> <!-- required -->
+            <input id="name" type="text" name="name" placeholder="Введите имя" value="<?=$input_values['name']?>"> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['name'])) {
                     print $errors['name']['message'];
@@ -61,7 +61,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="contacts">Контактные данные*</label>
-            <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"></textarea> <!-- required -->
+            <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?=$input_values['contacts']?></textarea> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['contacts'])) {
                     print $errors['contacts']['message'];

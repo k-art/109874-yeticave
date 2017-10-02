@@ -12,3 +12,5 @@ define('TEMPLATES_DIR', 'templates/');
 define('TEMPLATE_EXT', '.php');
 
 define('MAX_FILE_SIZE', 200000);
+
+define('IMG_DIR', '/img/');

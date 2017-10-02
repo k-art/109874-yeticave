@@ -2,8 +2,15 @@
 require_once ('functions.php');
 require_once ('init.php');
 
-$title = 'Главная';
+$title = 'Лоты по категориям';
 $categories = get_all_categories($connect);
+$errors = [];
+$current_cat = null;
+
+if (isset($_GET['cat_id'])) {
+    $current_cat = $_GET['cat_id'];
+}
+
 $lots = db_select_data($connect, '
 SELECT
   lots.id,
@@ -11,27 +18,27 @@ SELECT
   lots.init_price,
   lots.lot_image,
   lots.expire_date,
+  lots.creation_date,
   IFNULL(MAX(bets.price), lots.init_price) as lot_price,
   COUNT(bets.lot_id) as bets_count,
-  categories.id as cat_id,
-  categories.name as cat_name
+  categories.name as cat_name,
+  categories.id as cat_id
 FROM lots
 LEFT JOIN bets
 ON bets.lot_id = lots.id
 LEFT JOIN categories
 ON categories.id = lots.category_id
-WHERE lots.expire_date > NOW()
+WHERE categories.id = ?
 GROUP BY lots.id
-ORDER BY lots.expire_date;'
+ORDER BY lots.creation_date DESC;', [$current_cat]
 );
 
-$cat_class_to_add = ['boards', 'attachment', 'boots', 'clothing', 'tools', 'other'];
-
-$content = render_template('index',
+$content = render_template('all-lots',
     [
         'categories' => $categories,
-        'cat_class_to_add' => $cat_class_to_add,
-        'lots' => $lots
+        'current_cat' => $current_cat,
+        'lots' => $lots,
+        'errors' => $errors
     ]
 );
 $layout_template = render_template('layout',
