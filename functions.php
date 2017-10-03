@@ -14,7 +14,7 @@ require_once ('mysql_helper.php');
  * @param $sql string SQL запрос
  * @param array $data Пользовательские данные
  *
- * @return array Массив данных
+ * @return array|null
  */
 function db_select_data($connect, $sql, $data = []) {
 
@@ -40,7 +40,7 @@ function db_select_data($connect, $sql, $data = []) {
  * @param $table_name string Имя таблицы
  * @param array $data Данные для записи
  *
- * @return mixed
+ * @return bool|int|string
  */
 function db_insert_data($connect, $table_name, $data = []) {
 
@@ -69,7 +69,15 @@ function db_insert_data($connect, $table_name, $data = []) {
     return mysqli_insert_id($connect);
 }
 
-//Произвольный запрос
+/**
+ * Делает произвольный запрос в БД
+ *
+ * @param $connect mysqli Ресурс соединения
+ * @param $sql string Строка запроса
+ * @param array $data Данные для записи
+ *
+ * @return bool
+ */
 function db_exec_query($connect, $sql, $data = []) {
 
     $stmt = db_get_prepare_stmt($connect, $sql, $data);
@@ -85,11 +93,24 @@ function db_exec_query($connect, $sql, $data = []) {
     return true;
 }
 
+/**
+ * Находит все категории из бд
+ *
+ * @param $connect mysqli Ресурс соединения
+ * @return array
+ */
 function get_all_categories($connect) {
     $sql = 'SELECT * FROM categories';
     return db_select_data($connect, $sql);
 }
 
+/**
+ * Устанавливает имя категории
+ *
+ * @param $id
+ * @param array $categories Список категорий
+ * @return bool|string
+ */
 function set_category($id, $categories) {
     $cat = '';
 
@@ -105,7 +126,12 @@ function set_category($id, $categories) {
     return false;
 };
 
-//Валидация формы
+/**
+ * Валидирует форму
+ *
+ * @param $rules array Правила для валидации
+ * @return array
+ */
 function validate_form($rules) {
     $all_errors = [];
 
@@ -162,19 +188,55 @@ function validate_form($rules) {
     }
     return $all_errors;
 }
+
+/**
+ * Валидирует число
+ *
+ * @param $value
+ * @return mixed
+ */
 function validate_number($value) {
     return filter_var($value, FILTER_VALIDATE_FLOAT);
 }
+
+/**
+ * Валидирует текст
+ *
+ * @param $value
+ * @return mixed
+ */
 function filter_text($value) {
     return filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
+
+/**
+ * Валидирует email
+ *
+ * @param $value
+ * @return mixed
+ */
 function validate_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL);
 }
+
+/**
+ * Валидирует дату
+ *
+ * @param $date
+ * @return bool
+ */
 function validate_date($date) {
     return (preg_match('/^(\\d{2})\\.(\\d{2})\\.(\\d{4})$/', $date, $m) and checkdate($m[2], $m[1], $m[3]));
 };
 
+/**
+ * Валидирует файл
+ *
+ * @param $type string Тип файла
+ * @param $size int Размер файла
+ * @param $file string Имя файла для формирования ошибки
+ * @return array
+ */
 function validate_file ($type, $size, $file) {
     $valid_file_types = ['image/jpeg', 'image/png'];
     $file_error = [];
@@ -188,6 +250,13 @@ function validate_file ($type, $size, $file) {
     return $file_error;
 }
 
+/**
+ * Ищет пользователя по email
+ *
+ * @param $connect mysqli Ресурс соединения
+ * @param $email string email для проверки
+ * @return mixed|null
+ */
 function search_user_by_email($connect, $email) {
     $users = db_select_data($connect, 'SELECT * FROM users');
 
@@ -201,6 +270,12 @@ function search_user_by_email($connect, $email) {
     return $result;
 }
 
+/**
+ * Подставляет правильное окончание слова 'день'
+ *
+ * @param $value int День в виде числа
+ * @return string
+ */
 function days($value) {
     $res_1 = $value % 10;
     $res_2 = $value / 10 % 10;
@@ -215,7 +290,12 @@ function days($value) {
     }
     return "дней";
 }
-//Подсчет оставшегося времени
+/**
+ * Выводит оставшееся время до завершения торгов лота
+ *
+ * @param $value
+ * @return false|string
+ */
 function set_lot_time_remaining ($value) {
     $expire_date = strtotime($value);
     $now = strtotime('now');
@@ -233,7 +313,12 @@ function set_lot_time_remaining ($value) {
     return "$result $day_name";
 }
 
-//Форматирование времени
+/**
+ * Форматирует время
+ *
+ * @param $time_stamp
+ * @return false|string
+ */
 function format_time ($time_stamp) {
     $time = strtotime($time_stamp);
     $now = strtotime('now');
@@ -248,7 +333,13 @@ function format_time ($time_stamp) {
     return gmdate('G часов назад', $past_time);
 }
 
-//Отрисовка шаблона
+/**
+ * Отрисовывает шаблон
+ *
+ * @param $file_name string Имя шаблона
+ * @param $data array Данные для вставки
+ * @return string Сгенерированный шаблон
+ */
 function render_template ($file_name, $data) {
 
     $path_to_template_file = TEMPLATES_DIR . $file_name . TEMPLATE_EXT;
@@ -262,7 +353,9 @@ function render_template ($file_name, $data) {
     return '';
 }
 
-//Проверка сессии
+/**
+ * Проверяет наличие открытой сессии
+ */
 function init_session() {
     if (!session_start()) {
         print "я закрылась";
