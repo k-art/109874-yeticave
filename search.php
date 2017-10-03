@@ -10,6 +10,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_value = '%'. $_GET['search'] .'%';
     $search = mysqli_real_escape_string($connect, $search_value);
 };
+
 $search_lots = db_select_data($connect, '
         SELECT 
           lots.id,

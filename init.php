@@ -3,6 +3,7 @@ require_once ('config.php');
 $error = '';
 
 $connect = mysqli_connect(HOST, USER, PASSWORD, DATABASE, PORT);
+mysqli_set_charset($connect, 'utf8');
 
 if (!$connect) {
     $error = mysqli_connect_error();
