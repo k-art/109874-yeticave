@@ -30,7 +30,7 @@ function db_select_data($connect, $sql, $data = []) {
     if (!$result) {
         return [];
     }
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return set_filter_for_all_strings(mysqli_fetch_all($result, MYSQLI_ASSOC));
 }
 
 /**
@@ -125,6 +125,41 @@ function set_category($id, $categories) {
     }
     return false;
 };
+
+/**
+ * Фильтрует текствый контент
+ *
+ * @param string $content Исходный текстовый контент
+ * @return string Экранированный текстовый контент
+ */
+function filter_content($content) {
+    return htmlentities($content, ENT_QUOTES, "UTF-8");
+}
+
+/**
+ * Функция обертка для рекурсивной фильтрации текствого
+ * контента.
+ *
+ * @param $arr array Исходный массив
+ * @return array Экранированный массив
+ */
+function set_filter_for_all_strings($arr) {
+
+    $result = array_map(function($something) {
+        if (gettype($something)=== 'array') {
+            return set_filter_for_all_strings($something);
+        }
+
+        if (gettype($something) === 'string') {
+            return filter_content($something);
+        }
+
+        return $something;
+    }, $arr);
+
+
+    return $result;
+}
 
 /**
  * Валидирует форму

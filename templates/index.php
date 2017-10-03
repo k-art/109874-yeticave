@@ -14,7 +14,7 @@
     <section class="lots">
         <div class="lots__header">
             <h2>Открытые лоты</h2>
-            <select class="lots__select">
+            <select class="lots__select" onchange="show_category(this)">
                 <option>Все категории</option>
                 <?php
                 foreach ($categories as $cat) : ?>
@@ -54,3 +54,8 @@
         <?=$pagination; ?>
     </section>
 </main>
+<script>
+    function show_category(element) {
+        location.href = "all-lots.php?cat_id=" + element.value;
+    }
+</script>

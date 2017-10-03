@@ -11,23 +11,6 @@ if (isset($_GET['cat_id'])) {
     $current_cat = $_GET['cat_id'];
 }
 
-$cur_page = 1;
-if (isset($_GET['page'])) {
-    $cur_page = $_GET['page'];
-}
-$page_items = 3;
-$items_count = db_select_data($connect, '
-    SELECT COUNT(*) 
-    as cnt FROM lots
-    LEFT JOIN categories
-    ON categories.id = lots.category_id
-    WHERE categories.id = ?', [$current_cat]
-);
-
-$pages_count = ceil(intval($items_count[0]['cnt']) / $page_items);
-$offset = ($cur_page - 1) * $page_items;
-$pages = range(1, $pages_count);
-
 $lots = db_select_data($connect, '
 SELECT
   lots.id,
@@ -47,24 +30,15 @@ LEFT JOIN categories
 ON categories.id = lots.category_id
 WHERE categories.id = ?
 GROUP BY lots.id
-ORDER BY lots.creation_date DESC
-LIMIT ? OFFSET ?', [$current_cat, $page_items, $offset]
+ORDER BY lots.creation_date DESC;', [$current_cat]
 );
 
-$pagination = render_template('pagination',
-    [
-        'pages' => $pages,
-        'pages_count' => $pages_count,
-        'cur_page' => $cur_page
-    ]
-);
 $content = render_template('all-lots',
     [
         'categories' => $categories,
         'current_cat' => $current_cat,
         'lots' => $lots,
-        'errors' => $errors,
-        'pagination' => $pagination
+        'errors' => $errors
     ]
 );
 $layout_template = render_template('layout',

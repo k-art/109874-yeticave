@@ -42,6 +42,5 @@
                 <?php endforeach; ?>
             </ul>
         </section>
-        <?=$pagination; ?>
     </div>
 </main>
