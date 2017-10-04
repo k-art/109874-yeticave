@@ -1,6 +1,8 @@
 {
-    "name": "yeticave",
-    "description": "Личный проект «YetiCave» от HTML Academy",
+    "name": "artem/109874-yeticave",
+    "description": "online auction",
     "type": "project",
-    "require": {}
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
 }

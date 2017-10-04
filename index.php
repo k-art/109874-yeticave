@@ -1,6 +1,7 @@
 <?php
 require_once ('functions.php');
 require_once ('init.php');
+require_once ('getwinner.php');
 
 $title = 'Главная';
 $categories = get_all_categories($connect);
@@ -37,6 +38,7 @@ $lots = db_select_data($connect, '
     LEFT JOIN categories
     ON categories.id = lots.category_id
     WHERE lots.expire_date > NOW()
+    AND lots.winner_id IS NULL
     GROUP BY lots.id
     ORDER BY lots.expire_date
     LIMIT ? OFFSET ?;', [$page_items, $offset]);
