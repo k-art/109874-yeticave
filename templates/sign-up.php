@@ -4,7 +4,7 @@
             <?php
             foreach ($categories as $cat) : ?>
                 <li class="nav__item">
-                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=$cat['name']?></a>
+                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=filter_content($cat['name'])?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -22,7 +22,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="email">E-mail*</label>
-            <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=$input_values['email']?>"> <!-- required -->
+            <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=filter_content($input_values['email'])?>"> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['email'])) {
                     print $errors['email']['message'];
@@ -48,7 +48,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="name">Имя*</label>
-            <input id="name" type="text" name="name" placeholder="Введите имя" value="<?=$input_values['name']?>"> <!-- required -->
+            <input id="name" type="text" name="name" placeholder="Введите имя" value="<?=filter_content($input_values['name'])?>"> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['name'])) {
                     print $errors['name']['message'];
@@ -61,7 +61,7 @@
         <div class="form__item">
         <?php endif; ?>
             <label for="contacts">Контактные данные*</label>
-            <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?=$input_values['contacts']?></textarea> <!-- required -->
+            <textarea id="contacts" name="contacts" placeholder="Напишите как с вами связаться"><?=filter_content($input_values['contacts'])?></textarea> <!-- required -->
             <span class="form__error">
                 <?php if (isset($errors['contacts'])) {
                     print $errors['contacts']['message'];

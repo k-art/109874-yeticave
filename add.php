@@ -1,6 +1,7 @@
 <?php
 require_once ('functions.php');
 require_once ('init.php');
+require_once ('vendor/autoload.php');
 
 $title = 'Добавление лота';
 $categories = get_all_categories($connect);

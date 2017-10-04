@@ -4,7 +4,7 @@
             <?php
             foreach ($categories as $cat) : ?>
                 <li class="nav__item">
-                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=$cat['name']?></a>
+                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=filter_content($cat['name'])?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -16,12 +16,12 @@
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="<?=$bet['lot_image']?>" width="54" height="40" alt="<?=$bet['lot_name']?>">
+                        <img src="<?=$bet['lot_image']?>" width="54" height="40" alt="<?=filter_content($bet['lot_name'])?>">
                     </div>
-                    <h3 class="rates__title"><a href="lot.php?id=<?=$bet['lot_id']?>"><?=$bet['lot_name']?></a></h3>
+                    <h3 class="rates__title"><a href="lot.php?id=<?=$bet['lot_id']?>"><?=filter_content($bet['lot_name'])?></a></h3>
                 </td>
                 <td class="rates__category">
-                    <?=$bet['cat_name']?>
+                    <?=filter_content($bet['cat_name'])?>
                 </td>
                 <td class="rates__timer">
                     <?php if (strtotime($bet['expire_date']) > TIME_24_HOURS) : ?>
@@ -31,7 +31,7 @@
                     <?php endif; ?>
                 </td>
                 <td class="rates__price">
-                    <?=$bet['price']?> р
+                    <?=floatval($bet['price'])?> р
                 </td>
                 <td class="rates__time">
                     <?=format_time($bet['date'])?>

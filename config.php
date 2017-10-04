@@ -14,3 +14,11 @@ define('TEMPLATE_EXT', '.php');
 define('MAX_FILE_SIZE', 200000);
 
 define('IMG_DIR', '/img/');
+
+define('BASE_URL', 'http://yeticave/');
+
+define('MAIL_HOST', 'smtp.mail.ru');
+define('MAIL_PORT', 465);
+define('MAIL_SECURITY', 'ssl');
+define('MAIL_USERNAME', 'doingsdone@mail.ru');
+define('MAIL_PASSWORD', 'rds7BgcL');
