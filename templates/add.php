@@ -4,7 +4,7 @@
             <?php
             foreach ($categories as $cat) : ?>
                 <li class="nav__item">
-                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=$cat['name']?></a>
+                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=filter_content($cat['name'])?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -25,7 +25,7 @@
             <div class="form__item">
             <?php endif; ?>
                 <label for="lot-name">Наименование</label>
-                <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=$input_values['lot-name']?>"> <!--required-->
+                <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=filter_content($input_values['lot-name'])?>"> <!--required-->
                 <span class="form__error">
                     <?php if (isset($errors['lot-name'])) {
                         print $errors['lot-name']['message'];
@@ -43,9 +43,9 @@
                     <option>Выберите категорию</option>
                     <?php foreach ($categories as $cat): ?>
                         <?php if (intval($input_values['category']) === intval($cat['id'])) : ?>
-                            <option value="<?=$cat['id']?>" selected><?=$cat['name']?></option>
+                            <option value="<?=$cat['id']?>" selected><?=filter_content($cat['name'])?></option>
                         <?php else: ?>
-                            <option value="<?=$cat['id']?>"><?=$cat['name']?></option>
+                            <option value="<?=$cat['id']?>"><?=filter_content($cat['name'])?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
@@ -63,7 +63,7 @@
         <div class="form__item form__item--wide">
         <?php endif; ?>
             <label for="description">Описание</label>
-            <textarea id="description" name="description" placeholder="Напишите описание лота" ><?=$input_values['description']?></textarea> <!--required-->
+            <textarea id="description" name="description" placeholder="Напишите описание лота" ><?=filter_content($input_values['description'])?></textarea> <!--required-->
             <span class="form__error">
                 <?php if (isset($errors['description'])) {
                     print $errors['description']['message'];
@@ -103,7 +103,7 @@
             <div class="form__item form__item--small">
             <?php endif; ?>
                 <label for="lot-rate">Начальная цена</label>
-                <input id="lot-rate" name="lot-rate" placeholder="0" value="<?=$input_values['lot-rate']?>"> <!--type="number" required-->
+                <input id="lot-rate" name="lot-rate" placeholder="0" value="<?=floatval($input_values['lot-rate'])?>"> <!--type="number" required-->
                 <span class="form__error">
                     <?php if (isset($errors['lot-rate'])) {
                         print $errors['lot-rate']['message'];
@@ -117,7 +117,7 @@
             <div class="form__item form__item--small">
             <?php endif; ?>
                 <label for="lot-step">Шаг ставки</label>
-                <input id="lot-step" name="lot-step" placeholder="0" value="<?=$input_values['lot-step']?>"> <!--type="number" required-->
+                <input id="lot-step" name="lot-step" placeholder="0" value="<?=floatval($input_values['lot-step'])?>"> <!--type="number" required-->
                 <span class="form__error">
                     <?php if (isset($errors['lot-step'])) {
                         print $errors['lot-step']['message'];
@@ -131,7 +131,7 @@
             <div class="form__item">
             <?php endif; ?>
                 <label for="lot-expire">Дата завершения</label>
-                <input class="form__input-date" id="lot-expire" type="text" name="lot-expire" placeholder="20.10.2017" value="<?=$input_values['lot-expire']?>"> <!--required-->
+                <input class="form__input-date" id="lot-expire" type="text" name="lot-expire" placeholder="20.10.2017" value="<?=filter_content($input_values['lot-expire'])?>"> <!--required-->
                 <span class="form__error">
                     <?php if (isset($errors['lot-expire'])) {
                         print $errors['lot-expire']['message'];

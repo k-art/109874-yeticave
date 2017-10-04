@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><?=$title;?></title>
+    <title><?=filter_content($title);?></title>
     <link href="css/normalize.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -19,7 +19,7 @@
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" method="get" action="search.php">
-            <input type="search" name="search" placeholder="Поиск лота" value="<?=!empty($_GET['search']) ? $_GET['search'] : ''?>">
+            <input type="search" name="search" placeholder="Поиск лота" value="<?=!empty($_GET['search']) ? filter_content($_GET['search']) : ''?>">
             <input class="main-header__search-btn" type="submit" name="find">
         </form>
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
@@ -58,7 +58,7 @@
             <?php
             foreach ($categories as $cat) : ?>
                 <li class="nav__item">
-                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=$cat['name']?></a>
+                    <a href="all-lots.php?cat_id=<?= $cat['id']; ?>"><?=filter_content($cat['name'])?></a>
                 </li>
             <?php endforeach; ?>
         </ul>

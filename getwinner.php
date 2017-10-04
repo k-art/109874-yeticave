@@ -2,10 +2,11 @@
 require_once ('functions.php');
 require_once ('init.php');
 require_once ('vendor/autoload.php');
+require_once ('config.php');
 
-$transport = (new Swift_SmtpTransport('smtp.mail.ru', 465, 'ssl'))
-    ->setUsername('doingsdone@mail.ru')
-    ->setPassword('rds7BgcL');
+$transport = (new Swift_SmtpTransport(MAIL_HOST, MAIL_PORT, MAIL_SECURITY))
+    ->setUsername(MAIL_USERNAME)
+    ->setPassword(MAIL_PASSWORD);
 
 // Create the Mailer using your created Transport
 $mailer = new Swift_Mailer($transport);
